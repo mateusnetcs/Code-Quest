@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Certificados — Code Quest BNCC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--gold:#b8860b;--ink:#2a1f0f;--muted:#8a7f66;--bg:#e4dcc5;--card:#fffdf6;--line:rgba(184,134,11,.35)}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:var(--bg);font-family:'Nunito',sans-serif;color:var(--ink);padding:28px 16px 60px}
+  .wrap{max-width:760px;margin:0 auto}
+  header{text-align:center;margin-bottom:22px}
+  .selo{font-weight:900;letter-spacing:.08em;color:#8a6d1f;font-size:14px;margin-bottom:6px}
+  h1{font-family:'Playfair Display',serif;font-size:30px;margin:0 0 8px}
+  header p{color:var(--muted);font-size:14.5px;max-width:520px;margin:0 auto;line-height:1.5}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 10px 30px rgba(42,31,15,.1)}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 14px;border-radius:8px;font-family:inherit;font-weight:700;font-size:13.5px;cursor:pointer}
+  .btn:hover{background:#faf5e8}
+  .btn-go{background:var(--gold);color:#fff;border-color:var(--gold);margin-left:auto}
+  .btn-go:hover{opacity:.9;background:var(--gold)}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--line)}
+  tbody td{padding:8px;border-bottom:1px solid rgba(184,134,11,.15)}
+  tbody tr:hover{background:#faf5e8}
+  input[type=checkbox]{width:17px;height:17px;accent-color:var(--gold);cursor:pointer}
+  footer{text-align:center;margin-top:22px;font-size:12.5px;color:var(--muted);line-height:1.6}
+  footer a{color:#8a6d1f;font-weight:700;text-decoration:none}
+  footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="selo">🎮 CODE QUEST BNCC</div>
+      <h1>Emissor de Certificados</h1>
+      <p>Lista fixa com os 34 alunos reais das turmas 01 e 02 (unificadas). Cada certificado traz um QR Code
+      exclusivo que permite validar sua autenticidade. Desmarque quem não deve receber.</p>
+    </header>
+    <div class="panel">
+      <div class="actions">
+        <button class="btn" onclick="marcarTodos(true)">Marcar todos</button>
+        <button class="btn" onclick="marcarTodos(false)">Desmarcar todos</button>
+        <button class="btn btn-go" id="btn-emitir" onclick="emitirCertificados()">🎓 Emitir certificados</button>
+      </div>
+      <div id="tbl-certificados"></div>
+    </div>
+    <footer>
+      Certificado emitido não encontrado? <a href="verificar.html">Verificar um certificado →</a>
+    </footer>
+  </div>
+
+<script>
+// ---------- Dados fixos ----------
+const ASSINATURA_RESPONSAVEL = 'Mateus Oliveira da Conceição';
+const ASSINATURA_ORIENTADORA = 'Iracema Rocha da Silva';
+const PROGRAMA_NOME = 'Code Quest BNCC';
+
+const MODULOS_INFO = [
+  {id:1, icon:'🖱️', nome:'Mestre do Mouse', skill:'Clique, arrastar e navegar', qtd:10},
+  {id:2, icon:'⌨️', nome:'Atalhos Mágicos', skill:'Teclas de atalho', qtd:10},
+  {id:3, icon:'🖥️', nome:'Por Dentro do PC', skill:'Hardware e Sistema Operacional', qtd:10},
+  {id:4, icon:'🌐', nome:'Viagem na Internet', skill:'Como a internet funciona', qtd:10},
+  {id:5, icon:'🔗', nome:'Links Seguros', skill:'Navegação segura', qtd:10},
+  {id:6, icon:'✍️', nome:'Mestre da Digitação', skill:'Digitar no teclado', qtd:20},
+];
+const TOTAL_ATIVIDADES_CURRICULO = MODULOS_INFO.reduce((s,m)=>s+(m.qtd||10),0);
+
+const ATIV_NOMES = {
+  '1-1':'Clique Certeiro','1-2':'Duplo Clique','1-3':'Explorador de Arquivos','1-4':'Botão Direito','1-5':'Lixeira',
+  '1-6':'Rolar a Página','1-7':'Selecionar Vários','1-8':'Redimensionar Janela','1-9':'Caminho do Mouse','1-10':'Abrir um Programa',
+  '2-1':'Copiar com Ctrl+C','2-2':'Colar com Ctrl+V','2-3':'Copiar e Colar','2-4':'Salvar com Ctrl+S','2-5':'Selecionar Tudo',
+  '2-6':'Desfazer com Ctrl+Z','2-7':'Recortar com Ctrl+X','2-8':'Copiar um E-mail','2-9':'Editar e Salvar','2-10':'Desafio do Teclado',
+  '3-1':'Montar o PC','3-2':'Entrada ou Saída?','3-3':'Função de Cada Peça','3-4':'RAM ou HD?','3-5':'Sistema Operacional',
+  '3-6':'Conectar Periféricos','3-7':'Local ou Nuvem?','3-8':'Ligar o Computador','3-9':'Resolver Problemas','3-10':'Desafio do PC',
+  '4-1':'Caminho da Mensagem','4-2':'Mensagem em Pedacinhos','4-3':'Wi-Fi ou Fio?','4-4':'Aparelhos da Casa','4-5':'Endereço na Rede',
+  '4-6':'Baixar ou Enviar?','4-7':'Pedir e Receber','4-8':'Por que Trava?','4-9':'No Aparelho ou Longe?','4-10':'Desafio Final',
+  '5-1':'HTTPS ou HTTP?','5-2':'Cadeado do Site','5-3':'URL Suspeita','5-4':'Site Oficial','5-5':'Download Perigoso',
+  '5-6':'E-mail ou Golpe?','5-7':'Não Clique!','5-8':'Senha no Site','5-9':'Compartilhar Link','5-10':'Desafio Detetive',
+  '6-1':'Palavras Simples','6-2':'Letras Maiúsculas','6-3':'Com Espaço','6-4':'Sem Espaço','6-5':'Acento Agudo',
+  '6-6':'Acento Circunflexo','6-7':'Til ~','6-8':'Cedilha ç','6-9':'Frase Completa','6-10':'Desafio de Frases',
+  '6-11':'Só Números','6-12':'Somas','6-13':'Subtrações','6-14':'Arroba @','6-15':'Hashtag #',
+  '6-16':'Porcentagem %','6-17':'Asterisco *','6-18':'E comercial &','6-19':'Parênteses ( )','6-20':'! e Aspas "'
+};
+
+// Lista fixa dos 34 certificados (nome + número determinístico — precisa bater com dados-certificados.json)
+const CERTIFICADOS = [
+  {numero:'CQ-CODEQUEST2026-001', nome:'Ana Laura Silva de Sousa'},
+  {numero:'CQ-CODEQUEST2026-002', nome:'Bryan dos Santos Silva'},
+  {numero:'CQ-CODEQUEST2026-003', nome:'Carlos André Marques dos Santos'},
+  {numero:'CQ-CODEQUEST2026-004', nome:'Carlos Kalebe Ferreira Sousa'},
+  {numero:'CQ-CODEQUEST2026-005', nome:'Emanuel John França Nascimento'},
+  {numero:'CQ-CODEQUEST2026-006', nome:'Enzo Gabriel Sousa Almeida'},
+  {numero:'CQ-CODEQUEST2026-007', nome:'Enzo Miguel Almeida Borges Macedo'},
+  {numero:'CQ-CODEQUEST2026-008', nome:'Jhennifer Karolaynne Oliveira Lima'},
+  {numero:'CQ-CODEQUEST2026-009', nome:'Maria Izabella Araújo Silva'},
+  {numero:'CQ-CODEQUEST2026-010', nome:'Pedro Vitor Almeida da Silva'},
+  {numero:'CQ-CODEQUEST2026-011', nome:'Rayssa Mota Souza'},
+  {numero:'CQ-CODEQUEST2026-012', nome:'Rayssa Silva Conceição'},
+  {numero:'CQ-CODEQUEST2026-013', nome:'Ryalison Gabriel Leite dos Santos'},
+  {numero:'CQ-CODEQUEST2026-014', nome:'Thawanne da Silva Santos'},
+  {numero:'CQ-CODEQUEST2026-015', nome:'Yan Lucas Santos Oliveira'},
+  {numero:'CQ-CODEQUEST2026-016', nome:'Aila Elis Alves dos Santos'},
+  {numero:'CQ-CODEQUEST2026-017', nome:'Ana Júlia Silva dos Santos'},
+  {numero:'CQ-CODEQUEST2026-018', nome:'Breno dos Santos Silva'},
+  {numero:'CQ-CODEQUEST2026-019', nome:'Douglas Sales da Silva'},
+  {numero:'CQ-CODEQUEST2026-020', nome:'Isaque Pereira Araújo'},
+  {numero:'CQ-CODEQUEST2026-021', nome:'João Paulo Silva Brito'},
+  {numero:'CQ-CODEQUEST2026-022', nome:'Josiel Silva Cândido'},
+  {numero:'CQ-CODEQUEST2026-023', nome:'Laura Melissa Pereira Araújo'},
+  {numero:'CQ-CODEQUEST2026-024', nome:'Lyedson Oliveira Lira'},
+  {numero:'CQ-CODEQUEST2026-025', nome:'Marcos Henrique da Silva Carvalho'},
+  {numero:'CQ-CODEQUEST2026-026', nome:'Mikaelly Araújo Rocha'},
+  {numero:'CQ-CODEQUEST2026-027', nome:'Rafaela Pimentel Oliveira'},
+  {numero:'CQ-CODEQUEST2026-028', nome:'Renan Manuel Soares da Silva'},
+  {numero:'CQ-CODEQUEST2026-029', nome:'Ruth dos Santos Lima'},
+  {numero:'CQ-CODEQUEST2026-030', nome:'Samile Vitória da Silva Campo'},
+  {numero:'CQ-CODEQUEST2026-031', nome:'Zé Henrique Costa Sousa'},
+  {numero:'CQ-CODEQUEST2026-032', nome:'Nicollas Rhyan Barros da Silva'},
+  {numero:'CQ-CODEQUEST2026-033', nome:'Agatha da Silva Oliveira'},
+  {numero:'CQ-CODEQUEST2026-034', nome:'Anabelle Sophia Santos'},
+];
+
+// ---------- Helpers ----------
+function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function dataPorExtenso(){
+  const meses=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const d = new Date();
+  return `${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+}
+
+function atividadesDoModulo(modId){
+  return Object.keys(ATIV_NOMES)
+    .filter(k => k.split('-')[0] === String(modId))
+    .sort((a,b) => Number(a.split('-')[1]) - Number(b.split('-')[1]))
+    .map(k => ATIV_NOMES[k]);
+}
+
+function cantosHtml(){
+  return `<span class="canto tl"></span><span class="canto tr"></span><span class="canto bl"></span><span class="canto br"></span>`;
+}
+
+// A base do site onde este arquivo está hospedado (funciona em qualquer domínio/subpasta)
+function baseDir(){
+  const p = location.pathname;
+  return p.slice(0, p.lastIndexOf('/') + 1);
+}
+function urlVerificacao(numero){
+  return location.origin + baseDir() + 'verificar.html?cert=' + encodeURIComponent(numero);
+}
+
+// ---------- Checklist ----------
+function renderCertificados(){
+  const host = document.getElementById('tbl-certificados');
+  host.innerHTML = `<table>
+    <thead><tr><th></th><th>Nome</th></tr></thead>
+    <tbody>${CERTIFICADOS.map((c,i)=>`<tr>
+        <td><input type="checkbox" class="cert-chk" data-idx="${i}" checked onchange="atualizarBotao()"></td>
+        <td>${esc(c.nome)}</td>
+      </tr>`).join('')}</tbody></table>`;
+  atualizarBotao();
+}
+
+function marcarTodos(marcar){
+  document.querySelectorAll('.cert-chk').forEach(c=>c.checked=marcar);
+  atualizarBotao();
+}
+
+function selecionados(){
+  const idxs = new Set(Array.from(document.querySelectorAll('.cert-chk:checked')).map(c=>Number(c.dataset.idx)));
+  return CERTIFICADOS.filter((_,i)=>idxs.has(i));
+}
+
+function atualizarBotao(){
+  const btn = document.getElementById('btn-emitir');
+  const total = selecionados().length;
+  btn.textContent = total ? `🎓 Emitir ${total} certificado${total>1?'s':''}` : '🎓 Emitir certificados';
+}
+
+// ---------- Geração do certificado (frente + verso) ----------
+function gerarHtmlCertificado(item){
+  const frente = `
+  <section class="certificado frente">
+    <div class="borda">
+      ${cantosHtml()}
+      <div class="conteudo">
+        <div class="selo">🎮 CODE QUEST BNCC</div>
+        <h1>Certificado de Participação</h1>
+        <p class="corpo-intro">Certificamos, para os devidos fins, que o(a) participante abaixo identificado(a) concluiu
+        com êxito as atividades formativas e capacitações da trilha <b>Code Quest BNCC</b>, ofertado pela Uemasul e pelo
+        Curso de Administração, promovido no âmbito do projeto de inovação, Inclusão Digital de Adolescentes do Projeto
+        Vida e Esperança – Associação de Ensino e Assistência Social Santa Teresa de Jesus.</p>
+        <p class="nome">${esc(item.nome)}</p>
+
+        <div class="detalhes">
+          <div class="det"><span class="det-label">Turma</span><span class="det-valor">${esc(PROGRAMA_NOME)}</span></div>
+        </div>
+
+        <p class="corpo-fim">Programa estruturado em ${MODULOS_INFO.length} módulos — mouse, teclado, hardware,
+        internet, segurança digital e digitação — com o conteúdo programático completo detalhado no verso.</p>
+
+        <div class="rodape">
+          <div class="data"><span class="det-label">Emitido em</span>${dataPorExtenso()}</div>
+          <div class="assinatura">
+            <div class="assin-cursiva">${esc(ASSINATURA_RESPONSAVEL)}</div>
+            <div class="linha"></div>
+            <div>${esc(ASSINATURA_RESPONSAVEL)}<br><small>Professor(a) responsável</small></div>
+          </div>
+          <div class="assinatura">
+            <div class="assin-cursiva">${esc(ASSINATURA_ORIENTADORA)}</div>
+            <div class="linha"></div>
+            <div>${esc(ASSINATURA_ORIENTADORA)}<br><small>Professora orientadora do projeto</small></div>
+          </div>
+          <div class="autenticacao">
+            <div id="qr-${esc(item.numero)}" class="qr-box"></div>
+            <div class="qr-legenda">Escaneie para validar</div>
+          </div>
+        </div>
+      </div>
+      <div class="certnum">Certificado nº ${esc(item.numero)}</div>
+    </div>
+  </section>`;
+
+  const modulosHtml = MODULOS_INFO.map(m => `
+    <div class="verso-mod">
+      <h4><span>${m.icon}</span> ${esc(m.nome)}</h4>
+      <div class="verso-skill">${esc(m.skill)} · ${m.qtd} atividades</div>
+      <div class="verso-lista">${atividadesDoModulo(m.id).map(esc).join(' · ')}</div>
+    </div>`).join('');
+
+  const verso = `
+  <section class="certificado verso">
+    <div class="borda">
+      ${cantosHtml()}
+      <div class="conteudo">
+        <div class="selo">🎮 CODE QUEST BNCC</div>
+        <h2>Conteúdo Programático</h2>
+        <p class="verso-sub">${esc(item.nome)} · ${MODULOS_INFO.length} módulos · ${TOTAL_ATIVIDADES_CURRICULO} atividades de uso do computador</p>
+        <div class="verso-grid">${modulosHtml}</div>
+      </div>
+      <div class="certnum">Certificado nº ${esc(item.numero)}</div>
+    </div>
+  </section>`;
+
+  return frente + verso;
+}
+
+function emitirCertificados(){
+  const sel = selecionados();
+  if(!sel.length){ alert('Selecione pelo menos um aluno.'); return; }
+
+  let corpo = '';
+  sel.forEach(item => { corpo += gerarHtmlCertificado(item); });
+
+  const qrItems = sel.map(item => ({ id: 'qr-' + item.numero, url: urlVerificacao(item.numero) }));
+
+  const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+  <title>Certificados — ${esc(PROGRAMA_NOME)}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    @page{size:A4 landscape;margin:0}
+    body{font-family:'Nunito',sans-serif;background:#e4dcc5}
+    .certificado{width:297mm;height:210mm;display:flex;align-items:center;justify-content:center;
+      page-break-after:always;break-after:page;
+      background:
+        repeating-linear-gradient(45deg, rgba(139,107,30,.055) 0 1px, transparent 1px 15px),
+        repeating-linear-gradient(-45deg, rgba(139,107,30,.055) 0 1px, transparent 1px 15px),
+        #fdfaf1}
+    .certificado:last-child{page-break-after:auto;break-after:auto}
+    .borda{width:265mm;height:178mm;border:3px solid #b8860b;outline:1px solid #b8860b;outline-offset:8px;
+      padding:12mm 16mm;text-align:center;position:relative;display:flex;flex-direction:column;justify-content:center;
+      background:radial-gradient(ellipse at 50% 0%, rgba(184,134,11,.08), transparent 55%),#fffdf6}
+    .borda::before{content:'🎮';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      font-size:170px;opacity:.045;transform:rotate(-18deg);z-index:-1;pointer-events:none}
+    .canto{position:absolute;width:13mm;height:13mm;border:2px solid #b8860b;opacity:.5;pointer-events:none}
+    .canto.tl{top:5mm;left:5mm;border-right:none;border-bottom:none}
+    .canto.tr{top:5mm;right:5mm;border-left:none;border-bottom:none}
+    .canto.bl{bottom:5mm;left:5mm;border-right:none;border-top:none}
+    .canto.br{bottom:5mm;right:5mm;border-left:none;border-top:none}
+    .conteudo{display:flex;flex-direction:column;align-items:center;width:100%}
+
+    .selo{font-weight:900;letter-spacing:.08em;color:#8a6d1f;font-size:17px;margin-bottom:6mm}
+    h1{font-family:'Playfair Display',serif;font-size:36px;color:#2a1f0f;margin-bottom:6mm}
+    .corpo-intro{font-size:14.5px;color:#3a3226;line-height:1.55;max-width:218mm;margin:0 auto}
+    .nome{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:#6b4ea0;
+      margin:4mm 0 5mm;border-bottom:2px solid #b8860b;display:inline-block;padding:0 7mm 2.5mm}
+
+    .detalhes{display:flex;justify-content:center;width:100%;max-width:245mm;margin:5mm auto;
+      border-top:1px solid rgba(184,134,11,.5);border-bottom:1px solid rgba(184,134,11,.5);padding:3.5mm 0}
+    .det{flex:1;padding:0 3.5mm}
+    .det-label{display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#8a6d1f;margin-bottom:1.5mm}
+    .det-valor{display:block;font-size:15.5px;color:#2a1f0f;font-weight:700}
+
+    .corpo-fim{font-size:12.5px;color:#6b5d44;line-height:1.5;max-width:215mm;margin:0 auto}
+    .rodape{display:flex;justify-content:space-between;align-items:flex-end;gap:5mm;margin-top:7mm;padding:0 4mm;width:100%}
+    .data{font-size:12.5px;color:#3a3226;text-align:left;flex:0 0 auto}
+    .assinatura{text-align:center;font-size:12.5px;color:#3a3226;flex:1;min-width:0}
+    .assin-cursiva{font-family:'Dancing Script',cursive;font-weight:700;font-size:23px;color:#2a1f0f;
+      line-height:1;margin-bottom:1.5mm;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .assinatura .linha{width:100%;max-width:52mm;margin:0 auto 2mm;border-top:1px solid #3a3226}
+    .assinatura small{color:#8a7f66;font-size:10.5px}
+    .certnum{position:absolute;bottom:4mm;left:0;right:0;text-align:center;font-size:10.5px;letter-spacing:.04em;color:#a99a78}
+
+    .autenticacao{display:flex;flex-direction:column;align-items:center;gap:1.2mm;flex:0 0 auto}
+    .qr-box{width:19mm;height:19mm;background:#fff;border:1px solid rgba(184,134,11,.4);border-radius:2mm;padding:1mm}
+    .qr-box canvas,.qr-box img{width:100%!important;height:100%!important;display:block}
+    .qr-legenda{font-size:8.5px;color:#8a7f66;max-width:24mm;line-height:1.25}
+
+    /* ---- verso ---- */
+    .verso .borda{padding:10mm 16mm}
+    .verso h2{font-family:'Playfair Display',serif;font-size:30px;color:#2a1f0f;margin-bottom:2.5mm}
+    .verso-sub{font-size:13.5px;color:#8a7f66;margin-bottom:6.5mm}
+    .verso-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm 14mm;text-align:left;width:100%;max-width:245mm;margin:0 auto}
+    .verso-mod{border-top:1px solid rgba(184,134,11,.4);padding-top:2.5mm}
+    .verso-mod h4{font-size:15.5px;color:#2a1f0f;display:flex;align-items:center;gap:2mm;margin-bottom:1mm}
+    .verso-mod h4 span{font-size:18px}
+    .verso-skill{font-size:11.5px;color:#8a6d1f;font-style:italic;margin-bottom:1.8mm}
+    .verso-lista{font-size:11.5px;color:#3a3226;line-height:1.6}
+    @media print{ body{background:#fff} }
+  </style>
+  </head><body>${corpo}
+  <script>
+    const QR_ITEMS = ${JSON.stringify(qrItems)};
+    window.addEventListener('load', () => {
+      QR_ITEMS.forEach(q => {
+        const el = document.getElementById(q.id);
+        if(el && window.QRCode) new QRCode(el, {text:q.url, width:160, height:160, colorDark:'#2a1f0f', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M});
+      });
+      setTimeout(() => window.print(), 450);
+    });
+  <\/script>
+  </body></html>`;
+
+  const win = window.open('', '_blank');
+  if(!win){ alert('Permita pop-ups para gerar os certificados.'); return; }
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
+}
+
+renderCertificados();
+</script>
+</body>
+</html>

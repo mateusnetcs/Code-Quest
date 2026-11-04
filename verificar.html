@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verificar Certificado — Code Quest BNCC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--gold:#b8860b;--ink:#2a1f0f;--muted:#8a7f66;--bg:#e4dcc5;--card:#fffdf6;--ok:#2f7a4f;--okbg:#eaf6ee;--err:#a5333a;--errbg:#fbeceb}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);font-family:'Nunito',sans-serif;padding:24px}
+  .card{background:var(--card);border:1px solid rgba(184,134,11,.4);border-radius:16px;padding:32px;max-width:480px;width:100%;box-shadow:0 10px 30px rgba(42,31,15,.12)}
+  .selo{font-weight:900;letter-spacing:.08em;color:#8a6d1f;font-size:14px;margin-bottom:6px;text-align:center}
+  h1{font-family:'Playfair Display',serif;font-size:24px;color:var(--ink);text-align:center;margin:0 0 20px}
+  .campo{display:flex;gap:8px;margin-bottom:20px}
+  input{flex:1;min-width:0;padding:10px 12px;border:1px solid rgba(184,134,11,.5);border-radius:8px;font-size:15px;font-family:inherit;color:var(--ink)}
+  button{background:var(--gold);color:#fff;border:none;border-radius:8px;padding:10px 16px;font-weight:700;cursor:pointer;font-family:inherit;font-size:15px}
+  button:hover{opacity:.9}
+  .resultado{border-radius:10px;padding:18px;display:none;margin-bottom:4px}
+  .resultado.on{display:block}
+  .resultado.ok{background:var(--okbg);border:1px solid var(--ok)}
+  .resultado.err{background:var(--errbg);border:1px solid var(--err)}
+  .resultado h2{margin:0 0 10px;font-size:17px}
+  .resultado.ok h2{color:var(--ok)}
+  .resultado.err h2{color:var(--err)}
+  .resultado p{margin:6px 0;font-size:14px;color:var(--ink);line-height:1.5}
+  .resultado .label{display:block;color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:1px}
+  .hint{font-size:12.5px;color:var(--muted);text-align:center;margin-top:18px;line-height:1.5}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="selo">🎮 CODE QUEST BNCC</div>
+    <h1>Verificação de Certificado</h1>
+    <div class="campo">
+      <input id="inp-cert" type="text" placeholder="Nº do certificado (ex: CQ-CODEQUEST2026-001)">
+      <button onclick="verificar()">Verificar</button>
+    </div>
+    <div id="resultado" class="resultado"></div>
+    <p class="hint">Escaneie o QR Code impresso no certificado ou digite o número manualmente para confirmar se ele foi emitido pelo sistema Code Quest BNCC.</p>
+  </div>
+<script>
+function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function carregarDados(){
+  const res = await fetch('dados-certificados.json');
+  if(!res.ok) throw new Error('Não foi possível carregar a base de certificados.');
+  return res.json();
+}
+
+async function verificar(){
+  const campo = document.getElementById('inp-cert');
+  const numero = campo.value.trim();
+  const box = document.getElementById('resultado');
+  if(!numero){ campo.focus(); return; }
+  box.className = 'resultado on';
+  box.innerHTML = '<p>Verificando…</p>';
+  try{
+    const dados = await carregarDados();
+    const achado = dados.certificados.find(c => c.numero.toLowerCase() === numero.toLowerCase());
+    if(achado){
+      box.className = 'resultado on ok';
+      box.innerHTML = `<h2>✅ Certificado autêntico</h2>
+        <p><span class="label">Nome</span>${esc(achado.nome)}</p>
+        <p><span class="label">Número</span>${esc(achado.numero)}</p>
+        <p><span class="label">Programa</span>${esc(dados.programa)} · ${esc(dados.edicao)}</p>`;
+    } else {
+      box.className = 'resultado on err';
+      box.innerHTML = `<h2>❌ Certificado não encontrado</h2>
+        <p>Não localizamos o número <b>${esc(numero)}</b> em nossa base. Confira se digitou corretamente ou entre em contato com a organização do projeto.</p>`;
+    }
+  } catch(e){
+    box.className = 'resultado on err';
+    box.innerHTML = `<h2>⚠️ Erro ao verificar</h2><p>${esc(e.message)}</p>`;
+  }
+}
+
+(function initFromQuery(){
+  const params = new URLSearchParams(location.search);
+  const cert = params.get('cert');
+  if(cert){
+    document.getElementById('inp-cert').value = cert;
+    verificar();
+  }
+})();
+</script>
+</body>
+</html>
