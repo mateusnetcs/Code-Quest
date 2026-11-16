@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparativo Turma01 x Turma02 — Code Quest BNCC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#eef1f6; --surface:#ffffff; --surface-2:#f6f8fb;
+    --ink:#141b24; --ink-2:#48566a; --ink-muted:#7c8a9c;
+    --border:#dbe2ea; --grid:#e8ecf2;
+    --accent:#2a78d6; --accent-ink:#1c5cab; --critical:#d03b3b;
+
+    --m1:#2a78d6; --m1-text:#1c5cab;
+    --m2:#eb6834; --m2-text:#c34e1f;
+    --m3:#1baf7a; --m3-text:#0e8a5f;
+    --m4:#eda100; --m4-text:#a86f00;
+    --m5:#1ca7b3; --m5-text:#0f7e88;
+    --m6:#8a5fd6; --m6-text:#6a3fc0;
+    --duplas:#e87ba4; --duplas-text:#c14876;
+    --individual:#4a3aa7; --individual-text:#4a3aa7;
+    --t1:#1baf7a; --t1-text:#0e8a5f;
+    --t2:#8a5fd6; --t2-text:#6a3fc0;
+
+    --font-display:"Barlow Condensed",system-ui,sans-serif;
+    --font-body:"Public Sans",system-ui,sans-serif;
+    --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0d1116; --surface:#161b22; --surface-2:#1b212a;
+      --ink:#eef2f7; --ink-2:#aab6c4; --ink-muted:#7c8a9c;
+      --border:#2a323d; --grid:#242b34;
+      --accent:#3987e5; --accent-ink:#8fbcf0; --critical:#e05a5a;
+      --m1:#3987e5; --m1-text:#8fbcf0; --m2:#d95926; --m2-text:#f2915f;
+      --m3:#199e70; --m3-text:#4fd6a6; --m4:#c98500; --m4-text:#f0b23d;
+      --m5:#2bc3d1; --m5-text:#6fe0ea; --m6:#a480e8; --m6-text:#c6b3f2;
+      --duplas:#d55181; --duplas-text:#f093b4; --individual:#9085e9; --individual-text:#b6afef;
+      --t1:#199e70; --t1-text:#4fd6a6; --t2:#a480e8; --t2-text:#c6b3f2;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0d1116; --surface:#161b22; --surface-2:#1b212a;
+    --ink:#eef2f7; --ink-2:#aab6c4; --ink-muted:#7c8a9c;
+    --border:#2a323d; --grid:#242b34;
+    --accent:#3987e5; --accent-ink:#8fbcf0; --critical:#e05a5a;
+    --m1:#3987e5; --m1-text:#8fbcf0; --m2:#d95926; --m2-text:#f2915f;
+    --m3:#199e70; --m3-text:#4fd6a6; --m4:#c98500; --m4-text:#f0b23d;
+    --m5:#2bc3d1; --m5-text:#6fe0ea; --m6:#a480e8; --m6-text:#c6b3f2;
+    --duplas:#d55181; --duplas-text:#f093b4; --individual:#9085e9; --individual-text:#b6afef;
+    --t1:#199e70; --t1-text:#4fd6a6; --t2:#a480e8; --t2-text:#c6b3f2;
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.5;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--font-display);font-weight:700;text-wrap:balance;margin:0;color:var(--ink)}
+  p{margin:0}
+  .mono{font-family:var(--font-mono)}
+  .tnum{font-variant-numeric:tabular-nums}
+  .page{max-width:1280px;margin:0 auto;padding:2.75rem 1.75rem 5rem}
+
+  .report-nav{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.75rem}
+  .report-nav a{display:inline-flex;align-items:center;gap:.45rem;padding:.5rem 1rem;border-radius:99px;border:1px solid var(--border);background:var(--surface-2);color:var(--ink-2);font-family:var(--font-display);font-weight:600;font-size:.86rem;letter-spacing:.02em;text-decoration:none;transition:background .15s,color .15s,border-color .15s}
+  .report-nav a:hover{border-color:var(--accent);color:var(--ink)}
+  .report-nav a.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  .masthead{display:flex;flex-direction:column;gap:1.25rem;padding-bottom:2rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem}
+  .eyebrow{font-family:var(--font-display);font-weight:600;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+  .masthead h1{font-size:clamp(2.1rem,4.4vw,3.1rem);line-height:1.05}
+  .masthead-meta{display:flex;flex-wrap:wrap;gap:.5rem 1.6rem;color:var(--ink-2);font-size:.94rem}
+  .masthead-meta b{color:var(--ink);font-weight:600}
+  .masthead-lede{max-width:66ch;color:var(--ink-2);font-size:1.02rem}
+  .data-flag{display:inline-flex;align-items:flex-start;gap:.5rem;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:.5rem .85rem;font-size:.85rem;color:var(--ink-2);width:fit-content}
+  .data-flag b{color:var(--ink)}
+
+  section{margin-bottom:3.5rem}
+  .section-head{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1.4rem}
+  .section-head h2{font-size:1.7rem}
+  .section-head p{color:var(--ink-2);max-width:68ch;font-size:.97rem}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .kpi{background:var(--surface);padding:1.35rem 1.3rem;display:flex;flex-direction:column;gap:.35rem}
+  .kpi .label{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);font-weight:600}
+  .kpi .value{font-family:var(--font-display);font-weight:700;font-size:2.2rem;line-height:1}
+  .kpi .sub{font-size:.83rem;color:var(--ink-2)}
+
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.6rem}
+
+  .module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .module-card{background:var(--surface);padding:1.25rem 1.15rem;display:flex;flex-direction:column;gap:.15rem}
+  .module-card .m-icon{font-size:1.5rem}
+  .module-card .m-name{font-family:var(--font-display);font-weight:600;font-size:1.15rem;margin-top:.2rem}
+  .module-card .m-skill{font-size:.78rem;color:var(--ink-muted);margin-bottom:.6rem}
+  .module-card .m-stat{display:flex;justify-content:space-between;font-size:.86rem;padding:.28rem 0;border-top:1px dashed var(--border)}
+  .module-card .m-stat .l{color:var(--ink-2)}
+  .module-card .m-stat .v{font-weight:600}
+  .module-card .m-flag{margin-top:.65rem;font-size:.8rem;padding:.4rem .55rem;border-radius:7px;background:color-mix(in srgb, var(--critical) 12%, transparent);color:var(--critical);font-weight:600}
+
+  .barchart{display:flex;flex-direction:column;gap:.85rem}
+  .bar-row{display:grid;grid-template-columns:72px 1fr auto;align-items:center;gap:.7rem}
+  .bar-row .b-label{font-size:.82rem;color:var(--ink-2);display:flex;align-items:center;gap:.4rem}
+  .bar-row .b-track{background:var(--grid);border-radius:5px;height:20px;position:relative;overflow:visible}
+  .bar-row .b-fill{height:100%;border-radius:5px;min-width:6px}
+  .bar-row .b-value{font-family:var(--font-mono);font-weight:600;font-size:.84rem;min-width:56px;text-align:right}
+  .swatch{width:10px;height:10px;border-radius:3px;flex:none}
+
+  .chart-trio{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+  .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem 1.35rem}
+  .chart-card h3{font-size:1.02rem;font-family:var(--font-body);font-weight:700;margin-bottom:.2rem}
+  .chart-card .chart-note{font-size:.78rem;color:var(--ink-muted);margin-bottom:1rem}
+
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px}
+  table{border-collapse:collapse;width:100%;min-width:720px;font-size:.88rem}
+  thead th{text-align:left;font-family:var(--font-display);font-weight:600;letter-spacing:.03em;text-transform:uppercase;font-size:.74rem;color:var(--ink-muted);background:var(--surface-2);padding:.7rem .9rem;border-bottom:1px solid var(--border);position:sticky;top:0}
+  tbody td{padding:.6rem .9rem;border-bottom:1px solid var(--border);color:var(--ink-2)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--surface-2)}
+  td.num,th.num{text-align:right;font-family:var(--font-mono);color:var(--ink)}
+  td.name{color:var(--ink);font-weight:600}
+  .mod-chip{display:inline-flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:600;padding:.15rem .5rem;border-radius:99px}
+  .row-hot td{background:color-mix(in srgb, var(--critical) 7%, transparent)}
+
+  .pair-cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .pair-card{background:var(--surface);padding:1.4rem 1.3rem;display:flex;flex-direction:column;gap:.2rem}
+  .pair-card .p-tag{display:flex;align-items:center;gap:.5rem;font-family:var(--font-display);font-weight:600;font-size:1.1rem;margin-bottom:.7rem}
+  .pair-card .p-stat{display:flex;justify-content:space-between;padding:.32rem 0;border-top:1px dashed var(--border);font-size:.88rem}
+  .pair-card .p-stat .v{font-family:var(--font-mono);font-weight:700}
+
+  .heat-wrap{overflow-x:auto}
+  .heat-grid{display:grid;border:1px solid var(--border);border-radius:14px;overflow:hidden;min-width:640px}
+  .heat-cell{padding:.65rem .5rem;font-size:.82rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+  .heat-head{background:var(--surface-2);font-family:var(--font-display);font-weight:600;text-align:center;color:var(--ink-2)}
+  .heat-row-label{background:var(--surface-2);font-weight:600;display:flex;flex-direction:column;gap:.15rem;justify-content:center}
+  .heat-row-label .tag{font-size:.7rem;font-weight:500;color:var(--ink-muted)}
+  .heat-val{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;text-align:center}
+  .heat-empty{background:var(--surface);color:var(--border);text-align:center;font-size:.78rem}
+  .heat-legend{display:flex;align-items:center;gap:.5rem;margin-top:1rem;font-size:.8rem;color:var(--ink-muted)}
+  .heat-legend .ramp{display:flex;height:12px;border-radius:3px;overflow:hidden;width:180px}
+  .heat-legend .ramp span{flex:1}
+
+  .board{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .board-row{display:grid;grid-template-columns:44px 1fr 110px 200px 90px;align-items:center;gap:.9rem;padding:.85rem 1.1rem;background:var(--surface);border-bottom:1px solid var(--border)}
+  .board-row:last-child{border-bottom:none}
+  .board-row.top{background:color-mix(in srgb, var(--critical) 9%, transparent)}
+  .board-rank{font-family:var(--font-display);font-weight:700;font-size:1.15rem;color:var(--ink-muted);text-align:center}
+  .board-row.top .board-rank{color:var(--critical)}
+  .board-name{display:flex;flex-direction:column;gap:.1rem}
+  .board-name .n{font-weight:700}
+  .board-name .t{font-size:.75rem;color:var(--ink-muted)}
+  .board-errs{font-family:var(--font-mono);font-weight:700;text-align:right}
+  .board-track{background:var(--grid);border-radius:5px;height:14px;position:relative}
+  .board-fill{height:100%;border-radius:5px;background:var(--critical);opacity:.75}
+  .board-sub{font-family:var(--font-mono);font-size:.8rem;color:var(--ink-2);text-align:right}
+  .board-head{display:grid;grid-template-columns:44px 1fr 110px 200px 90px;gap:.9rem;padding:.6rem 1.1rem;background:var(--surface-2);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;font-family:var(--font-display);font-weight:600;color:var(--ink-muted)}
+  .board-head span:nth-child(3),.board-head span:nth-child(5){text-align:right}
+
+  .mindmap-frame{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem}
+  .mindmap-frame svg{width:100%;height:auto;display:block}
+
+  .kpi-compare{width:100%;border-collapse:collapse;font-size:.92rem}
+  .kpi-compare th{text-align:left;font-family:var(--font-display);font-weight:600;text-transform:uppercase;font-size:.72rem;letter-spacing:.04em;color:var(--ink-muted);padding:.6rem .9rem;border-bottom:1px solid var(--border)}
+  .kpi-compare td{padding:.7rem .9rem;border-bottom:1px solid var(--border)}
+  .kpi-compare tr:last-child td{border-bottom:none}
+  .kpi-compare td.num{font-family:var(--font-mono);text-align:right}
+  .kpi-compare td.t1{color:var(--t1-text);font-weight:700}
+  .kpi-compare td.t2{color:var(--t2-text);font-weight:700}
+
+  .compare-chart{display:flex;flex-direction:column;gap:.6rem}
+  .compare-bar-row{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:.6rem}
+  .compare-bar-row .cb-label{font-size:.82rem;color:var(--ink-2)}
+  .compare-bar-row .cb-tracks{display:flex;flex-direction:column;gap:.2rem}
+  .compare-bar-row .cb-track{background:var(--grid);border-radius:4px;height:14px;position:relative}
+  .compare-bar-row .cb-fill{height:100%;border-radius:4px}
+  .compare-bar-row .cb-val{font-family:var(--font-mono);font-size:.74rem;margin-left:.4rem}
+
+  .notes{border-top:1px solid var(--border);padding-top:1.6rem;color:var(--ink-muted);font-size:.85rem;display:flex;flex-direction:column;gap:.5rem}
+  .notes b{color:var(--ink-2)}
+
+  @media (max-width:920px){
+    .module-grid{grid-template-columns:repeat(2,1fr)}
+    .chart-trio{grid-template-columns:1fr}
+    .pair-cards{grid-template-columns:1fr}
+    .board-row,.board-head{grid-template-columns:36px 1fr 80px 90px}
+    .board-row span:nth-child(4),.board-head span:nth-child(4){display:none}
+  }
+  @media (max-width:600px){
+    .module-grid{grid-template-columns:1fr}
+    .bar-row{grid-template-columns:56px 1fr auto}
+    .board-row,.board-head{grid-template-columns:32px 1fr 76px}
+  }
+</style>
+</head><body>
+<div class="page">
+
+<nav class="report-nav">
+<a href="diario-expedicao.html">🖱️ Turma 01</a>
+<a href="diario-expedicao-turma02.html">⌨️ Turma 02</a>
+<a href="diario-expedicao-comparacao.html" class="active">🆚 Comparativo</a>
+<a href="../index.html">🎓 Certificados</a>
+</nav>
+<header class="masthead">
+  <span class="eyebrow">🆚 Comparativo · Code Quest BNCC</span>
+  <h1>Turma01 x Turma02, lado a lado</h1>
+  <p class="masthead-lede">As mesmas métricas dos diários individuais, agora comparadas entre as duas oficinas reais — <b>OFICINA01 · TURMA01</b> e <b>OFICINA02 · TURMA02</b> — cobrindo tudo o que foi aplicado em sala até agora.</p>
+  <div class="masthead-meta">
+    <span>Gerado em <b class="mono tnum">16/11/2026 19:46</b></span>
+  </div>
+</header>
+
+<section id="kpis">
+  <div class="section-head">
+    <span class="eyebrow" style="color:var(--ink-muted)">Visão geral</span>
+    <h2>Indicadores principais</h2>
+  </div>
+  <div class="panel">
+<table class="kpi-compare">
+  <thead><tr><th>Indicador</th><th class="num">Turma01</th><th class="num">Turma02</th></tr></thead>
+  <tbody>
+    <tr><td>Jogadores ativos</td><td class="num t1">10</td><td class="num t2">9</td></tr>
+    <tr><td>Duplas</td><td class="num t1">8</td><td class="num t2">9</td></tr>
+    <tr><td>Individuais</td><td class="num t1">2</td><td class="num t2">0</td></tr>
+    <tr><td>Tentativas válidas</td><td class="num t1">563</td><td class="num t2">568</td></tr>
+    <tr><td>Atividades concluídas</td><td class="num t1">536</td><td class="num t2">606</td></tr>
+    <tr><td>Módulos alcançados</td><td class="num t1">6/6</td><td class="num t2">6/6</td></tr>
+    <tr><td>Erros registrados</td><td class="num t1">2207</td><td class="num t2">3320</td></tr>
+    <tr><td>Erro médio por tentativa</td><td class="num t1">3.92</td><td class="num t2">5.85</td></tr>
+    <tr><td>Tempo somado em tela</td><td class="num t1">9.5h</td><td class="num t2">10.6h</td></tr>
+    <tr><td>Dias de aula registrados</td><td class="num t1">3</td><td class="num t2">4</td></tr>
+  </tbody>
+</table>
+</div>
+</section>
+
+
+<section id="modulos">
+  <div class="section-head">
+    <span class="eyebrow" style="color:var(--ink-muted)">Comparativo · por módulo</span>
+    <h2>As duas turmas, módulo a módulo</h2>
+    <p>Barra de cima (<span style="color:var(--t1-text);font-weight:700">verde</span>) é a Turma01, barra de baixo (<span style="color:var(--t2-text);font-weight:700">roxo</span>) é a Turma02, lado a lado por módulo.</p>
+  </div>
+  <div class="chart-trio">
+    <div class="chart-card"><h3>Erro médio por tentativa</h3><p class="chart-note">Por módulo</p><div class="compare-chart"><div class="compare-bar-row">
+          <span class="cb-label">M1</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:9%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:11%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">1.67</span>
+          <span class="cb-val" style="color:var(--t2-text)">1.96</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M2</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:12%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:16%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">2.19</span>
+          <span class="cb-val" style="color:var(--t2-text)">2.90</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M3</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:4%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:4%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">0.33</span>
+          <span class="cb-val" style="color:var(--t2-text)">0.76</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M4</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:6%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:7%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">1.05</span>
+          <span class="cb-val" style="color:var(--t2-text)">1.19</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M5</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:11%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:10%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">1.94</span>
+          <span class="cb-val" style="color:var(--t2-text)">1.73</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M6</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:67%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:100%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">11.85</span>
+          <span class="cb-val" style="color:var(--t2-text)">17.77</span>
+        </div></div></div>
+    <div class="chart-card"><h3>Tempo médio por tentativa</h3><p class="chart-note">Segundos, por módulo</p><div class="compare-chart"><div class="compare-bar-row">
+          <span class="cb-label">M1</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:51%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:61%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">53s</span>
+          <span class="cb-val" style="color:var(--t2-text)">63s</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M2</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:83%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:100%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">85s</span>
+          <span class="cb-val" style="color:var(--t2-text)">103s</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M3</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:49%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:43%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">50s</span>
+          <span class="cb-val" style="color:var(--t2-text)">44s</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M4</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:50%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:36%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">52s</span>
+          <span class="cb-val" style="color:var(--t2-text)">37s</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M5</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:46%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:43%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">47s</span>
+          <span class="cb-val" style="color:var(--t2-text)">44s</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M6</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:68%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:84%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">70s</span>
+          <span class="cb-val" style="color:var(--t2-text)">87s</span>
+        </div></div></div>
+    <div class="chart-card"><h3>Volume de tentativas</h3><p class="chart-note">Por módulo</p><div class="compare-chart"><div class="compare-bar-row">
+          <span class="cb-label">M1</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:58%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:70%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">84</span>
+          <span class="cb-val" style="color:var(--t2-text)">102</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M2</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:61%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:63%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">88</span>
+          <span class="cb-val" style="color:var(--t2-text)">92</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M3</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:64%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:55%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">93</span>
+          <span class="cb-val" style="color:var(--t2-text)">80</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M4</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:57%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:54%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">82</span>
+          <span class="cb-val" style="color:var(--t2-text)">79</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M5</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:56%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:48%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">81</span>
+          <span class="cb-val" style="color:var(--t2-text)">70</span>
+        </div><div class="compare-bar-row">
+          <span class="cb-label">M6</span>
+          <div class="cb-tracks">
+            <div class="cb-track"><div class="cb-fill" style="width:93%;background:var(--t1)"></div></div>
+            <div class="cb-track"><div class="cb-fill" style="width:100%;background:var(--t2)"></div></div>
+          </div>
+          <span class="cb-val" style="color:var(--t1-text)">135</span>
+          <span class="cb-val" style="color:var(--t2-text)">145</span>
+        </div></div></div>
+  </div>
+</section>
+
+
+<section id="dificeis">
+  <div class="section-head">
+    <span class="eyebrow" style="color:var(--ink-muted)">Pontos em comum</span>
+    <h2>Atividades difíceis nas duas turmas</h2>
+    <p>Estas atividades aparecem entre as mais difíceis (maior erro médio) tanto na Turma01 quanto na Turma02 — candidatas fortes a uma revisão de conteúdo ou explicação extra em sala.</p>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Atividade</th><th>Módulo</th><th class="num">Erro médio Turma01</th><th class="num">Erro médio Turma02</th></tr></thead>
+    <tbody><tr>
+      <td class="name">Acento Circunflexo</td>
+      <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+      <td class="num t1">61.29</td>
+      <td class="num t2">67.56</td>
+    </tr><tr>
+      <td class="name">Acento Agudo</td>
+      <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+      <td class="num t1">49.00</td>
+      <td class="num t2">40.00</td>
+    </tr><tr>
+      <td class="name">Desafio de Frases</td>
+      <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+      <td class="num t1">21.00</td>
+      <td class="num t2">33.86</td>
+    </tr><tr>
+      <td class="name">! e Aspas &quot;</td>
+      <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+      <td class="num t1">16.00</td>
+      <td class="num t2">32.43</td>
+    </tr><tr>
+      <td class="name">Copiar e Colar</td>
+      <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m2) 16%, transparent);color:var(--m2-text)">M2</span></td>
+      <td class="num t1">18.89</td>
+      <td class="num t2">16.70</td>
+    </tr><tr>
+      <td class="name">Palavras Simples</td>
+      <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+      <td class="num t1">9.12</td>
+      <td class="num t2">13.67</td>
+    </tr><tr>
+      <td class="name">Parênteses ( )</td>
+      <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+      <td class="num t1">9.00</td>
+      <td class="num t2">9.43</td>
+    </tr></tbody>
+  </table></div>
+</section>
+
+
+<section id="duplas">
+  <div class="section-head">
+    <span class="eyebrow" style="color:var(--ink-muted)">Dinâmica de jogo</span>
+    <h2>Duplas x individuais, nas duas turmas</h2>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Indicador</th><th class="num">T01 · duplas</th><th class="num">T01 · individual</th><th class="num">T02 · duplas</th><th class="num">T02 · individual</th></tr></thead>
+    <tbody>
+      <tr><td>Unidades</td><td class="num">8</td><td class="num">2</td><td class="num">9</td><td class="num">0</td></tr>
+      <tr><td>Erro médio</td><td class="num">4.36</td><td class="num">2.54</td><td class="num">5.85</td><td class="num">0.00</td></tr>
+      <tr><td>Tempo médio</td><td class="num">62s</td><td class="num">54s</td><td class="num">67s</td><td class="num">0s</td></tr>
+      <tr><td>Atividades concluídas (média)</td><td class="num">49.5</td><td class="num">70.0</td><td class="num">67.3</td><td class="num">0.0</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+
+<section id="ranking">
+  <div class="section-head">
+    <span class="eyebrow" style="color:var(--ink-muted)">Top 3 · quem mais errou</span>
+    <h2>Ranking de erros, lado a lado</h2>
+  </div>
+  <div class="pair-cards">
+    <div class="pair-card">
+      <span class="p-tag" style="color:var(--t1-text)">🟢 Turma01</span>
+      <div class="board"><div class="board-row" style="grid-template-columns:44px 1fr 110px 90px">
+          <span class="board-rank">1º</span>
+          <span class="board-name"><span class="n">Bryan &amp; Pedro</span><span class="t">dupla</span></span>
+          <span class="board-errs" style="color:var(--t1-text)">479 erros</span>
+          <span class="board-sub">6.75/tent.</span>
+        </div><div class="board-row" style="grid-template-columns:44px 1fr 110px 90px">
+          <span class="board-rank">2º</span>
+          <span class="board-name"><span class="n">Emmanuel &amp; Ryalison</span><span class="t">dupla</span></span>
+          <span class="board-errs" style="color:var(--t1-text)">465 erros</span>
+          <span class="board-sub">5.47/tent.</span>
+        </div><div class="board-row" style="grid-template-columns:44px 1fr 110px 90px">
+          <span class="board-rank">3º</span>
+          <span class="board-name"><span class="n">Carlos</span><span class="t">individual</span></span>
+          <span class="board-errs" style="color:var(--t1-text)">273 erros</span>
+          <span class="board-sub">3.79/tent.</span>
+        </div></div>
+    </div>
+    <div class="pair-card">
+      <span class="p-tag" style="color:var(--t2-text)">🟣 Turma02</span>
+      <div class="board"><div class="board-row" style="grid-template-columns:44px 1fr 110px 90px">
+          <span class="board-rank">1º</span>
+          <span class="board-name"><span class="n">Renan &amp; Douglas</span><span class="t">dupla</span></span>
+          <span class="board-errs" style="color:var(--t2-text)">603 erros</span>
+          <span class="board-sub">8.26/tent.</span>
+        </div><div class="board-row" style="grid-template-columns:44px 1fr 110px 90px">
+          <span class="board-rank">2º</span>
+          <span class="board-name"><span class="n">Samile &amp; Jamylle</span><span class="t">dupla</span></span>
+          <span class="board-errs" style="color:var(--t2-text)">443 erros</span>
+          <span class="board-sub">6.33/tent.</span>
+        </div><div class="board-row" style="grid-template-columns:44px 1fr 110px 90px">
+          <span class="board-rank">3º</span>
+          <span class="board-name"><span class="n">Nicollas &amp; Josiel</span><span class="t">dupla</span></span>
+          <span class="board-errs" style="color:var(--t2-text)">366 erros</span>
+          <span class="board-sub">8.51/tent.</span>
+        </div></div>
+    </div>
+  </div>
+</section>
+
+
+<div class="notes">
+  <p><b>Turma01:</b> janela de 02/09 03:25 a 16/09 12:58 · 770 tentativas brutas, 563 válidas após remover 207 reenvios duplicados.</p>
+  <p><b>Turma02:</b> janela de 02/09 19:28 a 31/10 19:44 · 980 tentativas brutas, 568 válidas após remover 412 reenvios duplicados.</p>
+  <p>Os critérios de limpeza (reenvios idênticos, cadastros duplicados e contas inativas/teste) seguem os mesmos usados nos relatórios individuais de cada turma — veja os detalhes lá.</p>
+  <p>Gerado em <b class="mono tnum">16/11/2026 19:46</b>.</p>
+</div>
+
+
+</div>
+</body></html>

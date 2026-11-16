@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diário da Expedição — TURMA01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#eef1f6; --surface:#ffffff; --surface-2:#f6f8fb;
+    --ink:#141b24; --ink-2:#48566a; --ink-muted:#7c8a9c;
+    --border:#dbe2ea; --grid:#e8ecf2;
+    --accent:#2a78d6; --accent-ink:#1c5cab; --critical:#d03b3b;
+
+    --m1:#2a78d6; --m1-text:#1c5cab;
+    --m2:#eb6834; --m2-text:#c34e1f;
+    --m3:#1baf7a; --m3-text:#0e8a5f;
+    --m4:#eda100; --m4-text:#a86f00;
+    --m5:#1ca7b3; --m5-text:#0f7e88;
+    --m6:#8a5fd6; --m6-text:#6a3fc0;
+    --duplas:#e87ba4; --duplas-text:#c14876;
+    --individual:#4a3aa7; --individual-text:#4a3aa7;
+    --t1:#1baf7a; --t1-text:#0e8a5f;
+    --t2:#8a5fd6; --t2-text:#6a3fc0;
+
+    --font-display:"Barlow Condensed",system-ui,sans-serif;
+    --font-body:"Public Sans",system-ui,sans-serif;
+    --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0d1116; --surface:#161b22; --surface-2:#1b212a;
+      --ink:#eef2f7; --ink-2:#aab6c4; --ink-muted:#7c8a9c;
+      --border:#2a323d; --grid:#242b34;
+      --accent:#3987e5; --accent-ink:#8fbcf0; --critical:#e05a5a;
+      --m1:#3987e5; --m1-text:#8fbcf0; --m2:#d95926; --m2-text:#f2915f;
+      --m3:#199e70; --m3-text:#4fd6a6; --m4:#c98500; --m4-text:#f0b23d;
+      --m5:#2bc3d1; --m5-text:#6fe0ea; --m6:#a480e8; --m6-text:#c6b3f2;
+      --duplas:#d55181; --duplas-text:#f093b4; --individual:#9085e9; --individual-text:#b6afef;
+      --t1:#199e70; --t1-text:#4fd6a6; --t2:#a480e8; --t2-text:#c6b3f2;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0d1116; --surface:#161b22; --surface-2:#1b212a;
+    --ink:#eef2f7; --ink-2:#aab6c4; --ink-muted:#7c8a9c;
+    --border:#2a323d; --grid:#242b34;
+    --accent:#3987e5; --accent-ink:#8fbcf0; --critical:#e05a5a;
+    --m1:#3987e5; --m1-text:#8fbcf0; --m2:#d95926; --m2-text:#f2915f;
+    --m3:#199e70; --m3-text:#4fd6a6; --m4:#c98500; --m4-text:#f0b23d;
+    --m5:#2bc3d1; --m5-text:#6fe0ea; --m6:#a480e8; --m6-text:#c6b3f2;
+    --duplas:#d55181; --duplas-text:#f093b4; --individual:#9085e9; --individual-text:#b6afef;
+    --t1:#199e70; --t1-text:#4fd6a6; --t2:#a480e8; --t2-text:#c6b3f2;
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.5;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--font-display);font-weight:700;text-wrap:balance;margin:0;color:var(--ink)}
+  p{margin:0}
+  .mono{font-family:var(--font-mono)}
+  .tnum{font-variant-numeric:tabular-nums}
+  .page{max-width:1280px;margin:0 auto;padding:2.75rem 1.75rem 5rem}
+
+  .report-nav{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.75rem}
+  .report-nav a{display:inline-flex;align-items:center;gap:.45rem;padding:.5rem 1rem;border-radius:99px;border:1px solid var(--border);background:var(--surface-2);color:var(--ink-2);font-family:var(--font-display);font-weight:600;font-size:.86rem;letter-spacing:.02em;text-decoration:none;transition:background .15s,color .15s,border-color .15s}
+  .report-nav a:hover{border-color:var(--accent);color:var(--ink)}
+  .report-nav a.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  .masthead{display:flex;flex-direction:column;gap:1.25rem;padding-bottom:2rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem}
+  .eyebrow{font-family:var(--font-display);font-weight:600;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+  .masthead h1{font-size:clamp(2.1rem,4.4vw,3.1rem);line-height:1.05}
+  .masthead-meta{display:flex;flex-wrap:wrap;gap:.5rem 1.6rem;color:var(--ink-2);font-size:.94rem}
+  .masthead-meta b{color:var(--ink);font-weight:600}
+  .masthead-lede{max-width:66ch;color:var(--ink-2);font-size:1.02rem}
+  .data-flag{display:inline-flex;align-items:flex-start;gap:.5rem;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:.5rem .85rem;font-size:.85rem;color:var(--ink-2);width:fit-content}
+  .data-flag b{color:var(--ink)}
+
+  section{margin-bottom:3.5rem}
+  .section-head{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1.4rem}
+  .section-head h2{font-size:1.7rem}
+  .section-head p{color:var(--ink-2);max-width:68ch;font-size:.97rem}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .kpi{background:var(--surface);padding:1.35rem 1.3rem;display:flex;flex-direction:column;gap:.35rem}
+  .kpi .label{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);font-weight:600}
+  .kpi .value{font-family:var(--font-display);font-weight:700;font-size:2.2rem;line-height:1}
+  .kpi .sub{font-size:.83rem;color:var(--ink-2)}
+
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.6rem}
+
+  .module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .module-card{background:var(--surface);padding:1.25rem 1.15rem;display:flex;flex-direction:column;gap:.15rem}
+  .module-card .m-icon{font-size:1.5rem}
+  .module-card .m-name{font-family:var(--font-display);font-weight:600;font-size:1.15rem;margin-top:.2rem}
+  .module-card .m-skill{font-size:.78rem;color:var(--ink-muted);margin-bottom:.6rem}
+  .module-card .m-stat{display:flex;justify-content:space-between;font-size:.86rem;padding:.28rem 0;border-top:1px dashed var(--border)}
+  .module-card .m-stat .l{color:var(--ink-2)}
+  .module-card .m-stat .v{font-weight:600}
+  .module-card .m-flag{margin-top:.65rem;font-size:.8rem;padding:.4rem .55rem;border-radius:7px;background:color-mix(in srgb, var(--critical) 12%, transparent);color:var(--critical);font-weight:600}
+
+  .barchart{display:flex;flex-direction:column;gap:.85rem}
+  .bar-row{display:grid;grid-template-columns:72px 1fr auto;align-items:center;gap:.7rem}
+  .bar-row .b-label{font-size:.82rem;color:var(--ink-2);display:flex;align-items:center;gap:.4rem}
+  .bar-row .b-track{background:var(--grid);border-radius:5px;height:20px;position:relative;overflow:visible}
+  .bar-row .b-fill{height:100%;border-radius:5px;min-width:6px}
+  .bar-row .b-value{font-family:var(--font-mono);font-weight:600;font-size:.84rem;min-width:56px;text-align:right}
+  .swatch{width:10px;height:10px;border-radius:3px;flex:none}
+
+  .chart-trio{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+  .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem 1.35rem}
+  .chart-card h3{font-size:1.02rem;font-family:var(--font-body);font-weight:700;margin-bottom:.2rem}
+  .chart-card .chart-note{font-size:.78rem;color:var(--ink-muted);margin-bottom:1rem}
+
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px}
+  table{border-collapse:collapse;width:100%;min-width:720px;font-size:.88rem}
+  thead th{text-align:left;font-family:var(--font-display);font-weight:600;letter-spacing:.03em;text-transform:uppercase;font-size:.74rem;color:var(--ink-muted);background:var(--surface-2);padding:.7rem .9rem;border-bottom:1px solid var(--border);position:sticky;top:0}
+  tbody td{padding:.6rem .9rem;border-bottom:1px solid var(--border);color:var(--ink-2)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--surface-2)}
+  td.num,th.num{text-align:right;font-family:var(--font-mono);color:var(--ink)}
+  td.name{color:var(--ink);font-weight:600}
+  .mod-chip{display:inline-flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:600;padding:.15rem .5rem;border-radius:99px}
+  .row-hot td{background:color-mix(in srgb, var(--critical) 7%, transparent)}
+
+  .pair-cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .pair-card{background:var(--surface);padding:1.4rem 1.3rem;display:flex;flex-direction:column;gap:.2rem}
+  .pair-card .p-tag{display:flex;align-items:center;gap:.5rem;font-family:var(--font-display);font-weight:600;font-size:1.1rem;margin-bottom:.7rem}
+  .pair-card .p-stat{display:flex;justify-content:space-between;padding:.32rem 0;border-top:1px dashed var(--border);font-size:.88rem}
+  .pair-card .p-stat .v{font-family:var(--font-mono);font-weight:700}
+
+  .heat-wrap{overflow-x:auto}
+  .heat-grid{display:grid;border:1px solid var(--border);border-radius:14px;overflow:hidden;min-width:640px}
+  .heat-cell{padding:.65rem .5rem;font-size:.82rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+  .heat-head{background:var(--surface-2);font-family:var(--font-display);font-weight:600;text-align:center;color:var(--ink-2)}
+  .heat-row-label{background:var(--surface-2);font-weight:600;display:flex;flex-direction:column;gap:.15rem;justify-content:center}
+  .heat-row-label .tag{font-size:.7rem;font-weight:500;color:var(--ink-muted)}
+  .heat-val{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;text-align:center}
+  .heat-empty{background:var(--surface);color:var(--border);text-align:center;font-size:.78rem}
+  .heat-legend{display:flex;align-items:center;gap:.5rem;margin-top:1rem;font-size:.8rem;color:var(--ink-muted)}
+  .heat-legend .ramp{display:flex;height:12px;border-radius:3px;overflow:hidden;width:180px}
+  .heat-legend .ramp span{flex:1}
+
+  .board{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .board-row{display:grid;grid-template-columns:44px 1fr 110px 200px 90px;align-items:center;gap:.9rem;padding:.85rem 1.1rem;background:var(--surface);border-bottom:1px solid var(--border)}
+  .board-row:last-child{border-bottom:none}
+  .board-row.top{background:color-mix(in srgb, var(--critical) 9%, transparent)}
+  .board-rank{font-family:var(--font-display);font-weight:700;font-size:1.15rem;color:var(--ink-muted);text-align:center}
+  .board-row.top .board-rank{color:var(--critical)}
+  .board-name{display:flex;flex-direction:column;gap:.1rem}
+  .board-name .n{font-weight:700}
+  .board-name .t{font-size:.75rem;color:var(--ink-muted)}
+  .board-errs{font-family:var(--font-mono);font-weight:700;text-align:right}
+  .board-track{background:var(--grid);border-radius:5px;height:14px;position:relative}
+  .board-fill{height:100%;border-radius:5px;background:var(--critical);opacity:.75}
+  .board-sub{font-family:var(--font-mono);font-size:.8rem;color:var(--ink-2);text-align:right}
+  .board-head{display:grid;grid-template-columns:44px 1fr 110px 200px 90px;gap:.9rem;padding:.6rem 1.1rem;background:var(--surface-2);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;font-family:var(--font-display);font-weight:600;color:var(--ink-muted)}
+  .board-head span:nth-child(3),.board-head span:nth-child(5){text-align:right}
+
+  .mindmap-frame{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem}
+  .mindmap-frame svg{width:100%;height:auto;display:block}
+
+  .kpi-compare{width:100%;border-collapse:collapse;font-size:.92rem}
+  .kpi-compare th{text-align:left;font-family:var(--font-display);font-weight:600;text-transform:uppercase;font-size:.72rem;letter-spacing:.04em;color:var(--ink-muted);padding:.6rem .9rem;border-bottom:1px solid var(--border)}
+  .kpi-compare td{padding:.7rem .9rem;border-bottom:1px solid var(--border)}
+  .kpi-compare tr:last-child td{border-bottom:none}
+  .kpi-compare td.num{font-family:var(--font-mono);text-align:right}
+  .kpi-compare td.t1{color:var(--t1-text);font-weight:700}
+  .kpi-compare td.t2{color:var(--t2-text);font-weight:700}
+
+  .compare-chart{display:flex;flex-direction:column;gap:.6rem}
+  .compare-bar-row{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:.6rem}
+  .compare-bar-row .cb-label{font-size:.82rem;color:var(--ink-2)}
+  .compare-bar-row .cb-tracks{display:flex;flex-direction:column;gap:.2rem}
+  .compare-bar-row .cb-track{background:var(--grid);border-radius:4px;height:14px;position:relative}
+  .compare-bar-row .cb-fill{height:100%;border-radius:4px}
+  .compare-bar-row .cb-val{font-family:var(--font-mono);font-size:.74rem;margin-left:.4rem}
+
+  .notes{border-top:1px solid var(--border);padding-top:1.6rem;color:var(--ink-muted);font-size:.85rem;display:flex;flex-direction:column;gap:.5rem}
+  .notes b{color:var(--ink-2)}
+
+  @media (max-width:920px){
+    .module-grid{grid-template-columns:repeat(2,1fr)}
+    .chart-trio{grid-template-columns:1fr}
+    .pair-cards{grid-template-columns:1fr}
+    .board-row,.board-head{grid-template-columns:36px 1fr 80px 90px}
+    .board-row span:nth-child(4),.board-head span:nth-child(4){display:none}
+  }
+  @media (max-width:600px){
+    .module-grid{grid-template-columns:1fr}
+    .bar-row{grid-template-columns:56px 1fr auto}
+    .board-row,.board-head{grid-template-columns:32px 1fr 76px}
+  }
+</style>
+</head><body>
+<div class="page">
+
+    <nav class="report-nav">
+<a href="diario-expedicao.html">🖱️ Turma 01</a>
+<a href="diario-expedicao-turma02.html">⌨️ Turma 02</a>
+<a href="diario-expedicao-comparacao.html">🆚 Comparativo</a>
+<a href="../index.html">🎓 Certificados</a>
+</nav>
+    <header class="masthead">
+      <span class="eyebrow">🧭 Diário da Expedição · Code Quest BNCC</span>
+      <h1>O que a turma fez nas aulas aplicadas</h1>
+      <p class="masthead-lede">Leitura completa dos registros reais enviados pelo jogo — todo clique, atalho e tentativa de duplas e jogadores individuais na oficina <b>OFICINA01 · TURMA01</b>, do início das aulas até o registro mais recente.</p>
+      <div class="masthead-meta">
+        <span>Janela de registros: <b class="mono tnum">02/09 03:25</b> → <b class="mono tnum">16/09 12:58</b></span>
+        <span>Gerado em <b class="mono tnum">16/11/2026 19:46</b></span>
+      </div>
+      <div class="data-flag">⚠️ <span><b>207 tentativas duplicadas</b> (envio repetido pelo app) foram removidas antes desta análise — os números abaixo já estão limpos, de 770 registros brutos restaram <b>563 tentativas válidas</b>.</span></div>
+    </header>
+    
+    <section class="kpis">
+      <div class="kpi"><span class="label">Jogadores ativos</span><span class="value mono tnum">10</span><span class="sub">8 duplas + 2 individuais</span></div>
+      <div class="kpi"><span class="label">Tentativas válidas</span><span class="value mono tnum">563</span><span class="sub">de 770 brutas</span></div>
+      <div class="kpi"><span class="label">Atividades concluídas</span><span class="value mono tnum">536</span><span class="sub">em 6 módulos</span></div>
+      <div class="kpi"><span class="label">Erros registrados</span><span class="value mono tnum" style="color:var(--critical)">2207</span><span class="sub">3.92 por tentativa</span></div>
+      <div class="kpi"><span class="label">Tempo somado em tela</span><span class="value mono tnum">568<span style="font-size:1.1rem">min</span></span><span class="sub">≈ 9.5h de jogo</span></div>
+    </section>
+    
+    
+    <section id="modulos">
+      <div class="section-head">
+        <span class="eyebrow" style="color:var(--ink-muted)">Progresso · por módulo</span>
+        <h2>Onde a turma passou mais tempo — e onde mais errou</h2>
+        <p>Os seis módulos são percorridos em sequência. Os números abaixo já refletem 536 atividades concluídas ao longo de 3 dias de aula registrados.</p>
+      </div>
+      <div class="module-grid">
+        <div class="module-card">
+          <span class="m-icon">🖱️</span>
+          <span class="m-name" style="color:var(--m1-text)">Módulo 1</span>
+          <span class="m-skill">Mestre do Mouse · Clique, arrastar e navegar</span>
+          <div class="m-stat"><span class="l">Jogadores</span><span class="v mono">9/10</span></div>
+          <div class="m-stat"><span class="l">Tentativas</span><span class="v mono">84</span></div>
+          <div class="m-stat"><span class="l">Erro médio</span><span class="v mono">1.67</span></div>
+          <div class="m-stat"><span class="l">Tempo médio</span><span class="v mono">53s</span></div>
+          
+        </div>
+        <div class="module-card">
+          <span class="m-icon">⌨️</span>
+          <span class="m-name" style="color:var(--m2-text)">Módulo 2</span>
+          <span class="m-skill">Atalhos Mágicos · Teclas de atalho</span>
+          <div class="m-stat"><span class="l">Jogadores</span><span class="v mono">8/10</span></div>
+          <div class="m-stat"><span class="l">Tentativas</span><span class="v mono">88</span></div>
+          <div class="m-stat"><span class="l">Erro médio</span><span class="v mono">2.19</span></div>
+          <div class="m-stat"><span class="l">Tempo médio</span><span class="v mono">85s</span></div>
+          
+        </div>
+        <div class="module-card">
+          <span class="m-icon">🖥️</span>
+          <span class="m-name" style="color:var(--m3-text)">Módulo 3</span>
+          <span class="m-skill">Por Dentro do PC · Hardware e Sistema Operacional</span>
+          <div class="m-stat"><span class="l">Jogadores</span><span class="v mono">8/10</span></div>
+          <div class="m-stat"><span class="l">Tentativas</span><span class="v mono">93</span></div>
+          <div class="m-stat"><span class="l">Erro médio</span><span class="v mono">0.33</span></div>
+          <div class="m-stat"><span class="l">Tempo médio</span><span class="v mono">50s</span></div>
+          
+        </div>
+        <div class="module-card">
+          <span class="m-icon">🌐</span>
+          <span class="m-name" style="color:var(--m4-text)">Módulo 4</span>
+          <span class="m-skill">Viagem na Internet · Como a internet funciona</span>
+          <div class="m-stat"><span class="l">Jogadores</span><span class="v mono">8/10</span></div>
+          <div class="m-stat"><span class="l">Tentativas</span><span class="v mono">82</span></div>
+          <div class="m-stat"><span class="l">Erro médio</span><span class="v mono">1.05</span></div>
+          <div class="m-stat"><span class="l">Tempo médio</span><span class="v mono">52s</span></div>
+          
+        </div>
+        <div class="module-card">
+          <span class="m-icon">🔗</span>
+          <span class="m-name" style="color:var(--m5-text)">Módulo 5</span>
+          <span class="m-skill">Links Seguros · Navegação segura</span>
+          <div class="m-stat"><span class="l">Jogadores</span><span class="v mono">8/10</span></div>
+          <div class="m-stat"><span class="l">Tentativas</span><span class="v mono">81</span></div>
+          <div class="m-stat"><span class="l">Erro médio</span><span class="v mono">1.94</span></div>
+          <div class="m-stat"><span class="l">Tempo médio</span><span class="v mono">47s</span></div>
+          
+        </div>
+        <div class="module-card">
+          <span class="m-icon">✍️</span>
+          <span class="m-name" style="color:var(--m6-text)">Módulo 6</span>
+          <span class="m-skill">Mestre da Digitação · Digitar no teclado</span>
+          <div class="m-stat"><span class="l">Jogadores</span><span class="v mono">8/10</span></div>
+          <div class="m-stat"><span class="l">Tentativas</span><span class="v mono">135</span></div>
+          <div class="m-stat"><span class="l">Erro médio</span><span class="v mono">11.85</span></div>
+          <div class="m-stat"><span class="l">Tempo médio</span><span class="v mono">70s</span></div>
+          <div class="m-flag">🔥 módulo mais difícil da turma</div>
+        </div></div>
+      <div class="chart-trio" style="margin-top:1.2rem">
+        <div class="chart-card"><h3>Erro médio por tentativa</h3><p class="chart-note">Erros ÷ tentativas, por módulo</p><div class="barchart"><div class="bar-row"><span class="b-label">M1</span><div class="b-track"><div class="b-fill" style="width:14%;background:var(--m1)"></div></div><span class="b-value">1.67</span></div>
+<div class="bar-row"><span class="b-label">M2</span><div class="b-track"><div class="b-fill" style="width:18%;background:var(--m2)"></div></div><span class="b-value">2.19</span></div>
+<div class="bar-row"><span class="b-label">M3</span><div class="b-track"><div class="b-fill" style="width:4%;background:var(--m3)"></div></div><span class="b-value">0.33</span></div>
+<div class="bar-row"><span class="b-label">M4</span><div class="b-track"><div class="b-fill" style="width:9%;background:var(--m4)"></div></div><span class="b-value">1.05</span></div>
+<div class="bar-row"><span class="b-label">M5</span><div class="b-track"><div class="b-fill" style="width:16%;background:var(--m5)"></div></div><span class="b-value">1.94</span></div>
+<div class="bar-row"><span class="b-label">M6</span><div class="b-track"><div class="b-fill" style="width:100%;background:var(--m6)"></div></div><span class="b-value">11.85</span></div></div></div>
+        <div class="chart-card"><h3>Tempo médio por tentativa</h3><p class="chart-note">Segundos por tentativa, por módulo</p><div class="barchart"><div class="bar-row"><span class="b-label">M1</span><div class="b-track"><div class="b-fill" style="width:62%;background:var(--m1)"></div></div><span class="b-value">53s</span></div>
+<div class="bar-row"><span class="b-label">M2</span><div class="b-track"><div class="b-fill" style="width:100%;background:var(--m2)"></div></div><span class="b-value">85s</span></div>
+<div class="bar-row"><span class="b-label">M3</span><div class="b-track"><div class="b-fill" style="width:59%;background:var(--m3)"></div></div><span class="b-value">50s</span></div>
+<div class="bar-row"><span class="b-label">M4</span><div class="b-track"><div class="b-fill" style="width:61%;background:var(--m4)"></div></div><span class="b-value">52s</span></div>
+<div class="bar-row"><span class="b-label">M5</span><div class="b-track"><div class="b-fill" style="width:55%;background:var(--m5)"></div></div><span class="b-value">47s</span></div>
+<div class="bar-row"><span class="b-label">M6</span><div class="b-track"><div class="b-fill" style="width:82%;background:var(--m6)"></div></div><span class="b-value">70s</span></div></div></div>
+        <div class="chart-card"><h3>Volume de tentativas</h3><p class="chart-note">Quantas vezes a turma tentou, por módulo</p><div class="barchart"><div class="bar-row"><span class="b-label">M1</span><div class="b-track"><div class="b-fill" style="width:62%;background:var(--m1)"></div></div><span class="b-value">84</span></div>
+<div class="bar-row"><span class="b-label">M2</span><div class="b-track"><div class="b-fill" style="width:65%;background:var(--m2)"></div></div><span class="b-value">88</span></div>
+<div class="bar-row"><span class="b-label">M3</span><div class="b-track"><div class="b-fill" style="width:69%;background:var(--m3)"></div></div><span class="b-value">93</span></div>
+<div class="bar-row"><span class="b-label">M4</span><div class="b-track"><div class="b-fill" style="width:61%;background:var(--m4)"></div></div><span class="b-value">82</span></div>
+<div class="bar-row"><span class="b-label">M5</span><div class="b-track"><div class="b-fill" style="width:60%;background:var(--m5)"></div></div><span class="b-value">81</span></div>
+<div class="bar-row"><span class="b-label">M6</span><div class="b-track"><div class="b-fill" style="width:100%;background:var(--m6)"></div></div><span class="b-value">135</span></div></div></div>
+      </div>
+    </section>
+    
+    
+    <section id="dificeis">
+      <div class="section-head">
+        <span class="eyebrow" style="color:var(--ink-muted)">Ranking · atividades</span>
+        <h2>As atividades que mais derrubaram a turma</h2>
+        <p>Ordenado pelo erro médio por tentativa (mínimo de 3 tentativas registradas). As 3 primeiras linhas, destacadas, concentraram a maior dificuldade.</p>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Atividade</th><th>Módulo</th><th class="num">Tentativas</th><th class="num">Erro médio</th><th class="num">Tempo médio</th><th class="num">% concluiu</th></tr></thead>
+        <tbody><tr class="row-hot">
+          <td class="name">Acento Circunflexo</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">7</td>
+          <td class="num" style="color:var(--critical)">61.29</td>
+          <td class="num">204s</td>
+          <td class="num">100%</td>
+        </tr><tr class="row-hot">
+          <td class="name">Acento Agudo</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">8</td>
+          <td class="num" style="color:var(--critical)">49.00</td>
+          <td class="num">120s</td>
+          <td class="num">100%</td>
+        </tr><tr class="row-hot">
+          <td class="name">Desafio de Frases</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num" style="color:var(--critical)">21.00</td>
+          <td class="num">148s</td>
+          <td class="num">100%</td>
+        </tr><tr class="">
+          <td class="name">Copiar e Colar</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m2) 16%, transparent);color:var(--m2-text)">M2</span></td>
+          <td class="num">9</td>
+          <td class="num" style="color:var(--critical)">18.89</td>
+          <td class="num">153s</td>
+          <td class="num">100%</td>
+        </tr><tr class="">
+          <td class="name">! e Aspas &quot;</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num" style="color:var(--critical)">16.00</td>
+          <td class="num">94s</td>
+          <td class="num">100%</td>
+        </tr><tr class="">
+          <td class="name">Til ~</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">7</td>
+          <td class="num" style="color:var(--critical)">15.43</td>
+          <td class="num">68s</td>
+          <td class="num">100%</td>
+        </tr><tr class="">
+          <td class="name">Cedilha ç</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">7</td>
+          <td class="num" style="color:var(--critical)">10.43</td>
+          <td class="num">54s</td>
+          <td class="num">100%</td>
+        </tr><tr class="">
+          <td class="name">Duplo Clique</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m1) 16%, transparent);color:var(--m1-text)">M1</span></td>
+          <td class="num">9</td>
+          <td class="num" style="color:var(--critical)">9.22</td>
+          <td class="num">54s</td>
+          <td class="num">100%</td>
+        </tr><tr class="">
+          <td class="name">Frase Completa</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num" style="color:var(--critical)">9.17</td>
+          <td class="num">70s</td>
+          <td class="num">100%</td>
+        </tr><tr class="">
+          <td class="name">Palavras Simples</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">8</td>
+          <td class="num" style="color:var(--critical)">9.12</td>
+          <td class="num">68s</td>
+          <td class="num">100%</td>
+        </tr><tr class="">
+          <td class="name">Parênteses ( )</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num" style="color:var(--critical)">9.00</td>
+          <td class="num">66s</td>
+          <td class="num">100%</td>
+        </tr><tr class="">
+          <td class="name">Desafio Detetive</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m5) 16%, transparent);color:var(--m5-text)">M5</span></td>
+          <td class="num">8</td>
+          <td class="num" style="color:var(--critical)">5.12</td>
+          <td class="num">74s</td>
+          <td class="num">100%</td>
+        </tr></tbody>
+      </table></div>
+    </section>
+    
+    
+    <section id="duplas">
+      <div class="section-head">
+        <span class="eyebrow" style="color:var(--ink-muted)">Dinâmica de jogo</span>
+        <h2>Jogar em dupla x jogar sozinho</h2>
+        <p>Comparação entre as contas registradas como dupla e as individuais — cada conta conta como uma unidade de jogo.</p>
+      </div>
+      <div class="pair-cards">
+        <div class="pair-card">
+          <span class="p-tag" style="color:var(--duplas-text)">👥 Duplas</span>
+          <div class="p-stat"><span>Unidades</span><span class="v">8</span></div>
+          <div class="p-stat"><span>Tentativas</span><span class="v">427</span></div>
+          <div class="p-stat"><span>Erro médio</span><span class="v">4.36</span></div>
+          <div class="p-stat"><span>Tempo médio</span><span class="v">62s</span></div>
+          <div class="p-stat"><span>Atividades concluídas (média)</span><span class="v">49.5</span></div>
+        </div>
+        <div class="pair-card">
+          <span class="p-tag" style="color:var(--individual-text)">👤 Individuais</span>
+          <div class="p-stat"><span>Unidades</span><span class="v">2</span></div>
+          <div class="p-stat"><span>Tentativas</span><span class="v">136</span></div>
+          <div class="p-stat"><span>Erro médio</span><span class="v">2.54</span></div>
+          <div class="p-stat"><span>Tempo médio</span><span class="v">54s</span></div>
+          <div class="p-stat"><span>Atividades concluídas (média)</span><span class="v">70.0</span></div>
+        </div>
+      </div>
+    </section>
+    
+    
+    <section id="tempo">
+      <div class="section-head">
+        <span class="eyebrow" style="color:var(--ink-muted)">Uso do tempo</span>
+        <h2>Quem passou mais tempo em qual módulo</h2>
+        <p>Minutos de tela por jogador em cada módulo, top 10 por tempo total somado. Células mais escuras = mais tempo.</p>
+      </div>
+      <div class="heat-wrap">
+        <div class="heat-grid" style="grid-template-columns:170px repeat(6,1fr)">
+          <div class="heat-cell heat-head">Jogador</div><div class="heat-cell heat-head">M1</div><div class="heat-cell heat-head">M2</div><div class="heat-cell heat-head">M3</div><div class="heat-cell heat-head">M4</div><div class="heat-cell heat-head">M5</div><div class="heat-cell heat-head">M6</div>
+          <div class="heat-cell heat-row-label">Bryan &amp; Pedro<span class="tag">dupla</span></div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 29%, var(--surface-2))">11.2</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 37%, var(--surface-2))">14.6</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 19%, var(--surface-2))">7.5</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 25%, var(--surface-2))">9.7</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 21%, var(--surface-2))">8.2</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 85%, var(--surface-2))">33.3</div><div class="heat-cell heat-row-label">Enzo &amp; Ryan<span class="tag">dupla</span></div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 25%, var(--surface-2))">9.7</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 38%, var(--surface-2))">14.7</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 55%, var(--surface-2))">21.5</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 28%, var(--surface-2))">11.1</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 35%, var(--surface-2))">13.8</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 12%, var(--surface-2))">4.8</div><div class="heat-cell heat-row-label">Ana Laura &amp; Rayssa<span class="tag">dupla</span></div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 28%, var(--surface-2))">11.0</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 56%, var(--surface-2))">22.0</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 22%, var(--surface-2))">8.7</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 18%, var(--surface-2))">7.2</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 21%, var(--surface-2))">8.4</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 43%, var(--surface-2))">16.9</div><div class="heat-cell heat-row-label">Thawane &amp; Jhennifer<span class="tag">dupla</span></div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 19%, var(--surface-2))">7.4</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 49%, var(--surface-2))">19.3</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 10%, var(--surface-2))">3.9</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 21%, var(--surface-2))">8.4</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 30%, var(--surface-2))">11.6</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 59%, var(--surface-2))">23.0</div><div class="heat-cell heat-row-label">Emmanuel &amp; Ryalison<span class="tag">dupla</span></div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 26%, var(--surface-2))">10.0</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 43%, var(--surface-2))">16.8</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 23%, var(--surface-2))">9.1</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 11%, var(--surface-2))">4.3</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 9%, var(--surface-2))">3.7</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 74%, var(--surface-2))">28.8</div><div class="heat-cell heat-row-label">Rayssa &amp; Izabella<span class="tag">dupla</span></div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 20%, var(--surface-2))">7.8</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 55%, var(--surface-2))">21.7</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 22%, var(--surface-2))">8.6</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 16%, var(--surface-2))">6.2</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 21%, var(--surface-2))">8.1</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 27%, var(--surface-2))">10.6</div><div class="heat-cell heat-row-label">Enzo Gabriel<span class="tag">individual</span></div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 19%, var(--surface-2))">7.4</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 17%, var(--surface-2))">6.8</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 30%, var(--surface-2))">11.7</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 42%, var(--surface-2))">16.6</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 8%, var(--surface-2))">3.2</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 42%, var(--surface-2))">16.5</div><div class="heat-cell heat-row-label">Carlos<span class="tag">individual</span></div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 23%, var(--surface-2))">9.1</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 23%, var(--surface-2))">8.9</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 16%, var(--surface-2))">6.3</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 18%, var(--surface-2))">7.2</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 17%, var(--surface-2))">6.8</div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 59%, var(--surface-2))">23.1</div><div class="heat-cell heat-row-label">Mateus &amp; Maria<span class="tag">dupla</span></div><div class="heat-cell heat-val" style="background:color-mix(in srgb, var(--critical) 1%, var(--surface-2))">0.4</div><div class="heat-cell heat-empty">—</div><div class="heat-cell heat-empty">—</div><div class="heat-cell heat-empty">—</div><div class="heat-cell heat-empty">—</div><div class="heat-cell heat-empty">—</div>
+        </div>
+      </div>
+    </section>
+    
+    
+    <section id="erros">
+      <div class="section-head">
+        <span class="eyebrow" style="color:var(--ink-muted)">Quem mais errou</span>
+        <h2>Ranking de erros por jogador</h2>
+        <p>Total de erros registrados por conta (dupla ou individual), do maior para o menor — um retrato de quem mais precisou de ajuda nas atividades.</p>
+      </div>
+      <div class="board">
+        <div class="board-head"><span></span><span>Jogador</span><span>Erros</span><span></span><span>Média</span></div>
+        <div class="board-row top">
+          <span class="board-rank">1º</span>
+          <span class="board-name"><span class="n">Bryan &amp; Pedro</span><span class="t">dupla</span></span>
+          <span class="board-errs">479</span>
+          <div class="board-track"><div class="board-fill" style="width:100%"></div></div>
+          <span class="board-sub">6.75/tent.</span>
+        </div><div class="board-row top">
+          <span class="board-rank">2º</span>
+          <span class="board-name"><span class="n">Emmanuel &amp; Ryalison</span><span class="t">dupla</span></span>
+          <span class="board-errs">465</span>
+          <div class="board-track"><div class="board-fill" style="width:97%"></div></div>
+          <span class="board-sub">5.47/tent.</span>
+        </div><div class="board-row top">
+          <span class="board-rank">3º</span>
+          <span class="board-name"><span class="n">Carlos</span><span class="t">individual</span></span>
+          <span class="board-errs">273</span>
+          <div class="board-track"><div class="board-fill" style="width:57%"></div></div>
+          <span class="board-sub">3.79/tent.</span>
+        </div><div class="board-row ">
+          <span class="board-rank">4º</span>
+          <span class="board-name"><span class="n">Thawane &amp; Jhennifer</span><span class="t">dupla</span></span>
+          <span class="board-errs">260</span>
+          <div class="board-track"><div class="board-fill" style="width:54%"></div></div>
+          <span class="board-sub">4.19/tent.</span>
+        </div><div class="board-row ">
+          <span class="board-rank">5º</span>
+          <span class="board-name"><span class="n">Enzo &amp; Ryan</span><span class="t">dupla</span></span>
+          <span class="board-errs">253</span>
+          <div class="board-track"><div class="board-fill" style="width:53%"></div></div>
+          <span class="board-sub">3.33/tent.</span>
+        </div><div class="board-row ">
+          <span class="board-rank">6º</span>
+          <span class="board-name"><span class="n">Rayssa &amp; Izabella</span><span class="t">dupla</span></span>
+          <span class="board-errs">227</span>
+          <div class="board-track"><div class="board-fill" style="width:47%"></div></div>
+          <span class="board-sub">3.66/tent.</span>
+        </div><div class="board-row ">
+          <span class="board-rank">7º</span>
+          <span class="board-name"><span class="n">Ana Laura &amp; Rayssa</span><span class="t">dupla</span></span>
+          <span class="board-errs">172</span>
+          <div class="board-track"><div class="board-fill" style="width:36%"></div></div>
+          <span class="board-sub">2.49/tent.</span>
+        </div><div class="board-row ">
+          <span class="board-rank">8º</span>
+          <span class="board-name"><span class="n">Enzo Gabriel</span><span class="t">individual</span></span>
+          <span class="board-errs">72</span>
+          <div class="board-track"><div class="board-fill" style="width:15%"></div></div>
+          <span class="board-sub">1.12/tent.</span>
+        </div><div class="board-row ">
+          <span class="board-rank">9º</span>
+          <span class="board-name"><span class="n">Mateus &amp; Maria</span><span class="t">dupla</span></span>
+          <span class="board-errs">6</span>
+          <div class="board-track"><div class="board-fill" style="width:4%"></div></div>
+          <span class="board-sub">3.00/tent.</span>
+        </div>
+      </div>
+    </section>
+    
+    
+    <section id="mapa">
+      <div class="section-head">
+        <span class="eyebrow" style="color:var(--ink-muted)">Visão geral</span>
+        <h2>Mapa mental da expedição — TURMA01</h2>
+        <p>Os seis módulos do currículo, com cobertura de jogadores e volume de tentativas, e as atividades que mais exigiram da turma em cada um.</p>
+      </div>
+      <div class="mindmap-frame"><svg viewBox="0 0 1180 860" xmlns="http://www.w3.org/2000/svg" font-family="Public Sans, system-ui, sans-serif">
+<line x1="590" y1="430" x2="590.0" y2="215.0" stroke="var(--m1)" stroke-width="2.5" opacity=".55"/>
+<line x1="590.0" y1="215.0" x2="590.0" y2="70.0" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="590" y1="430" x2="776.2" y2="322.5" stroke="var(--m2)" stroke-width="2.5" opacity=".55"/>
+<line x1="776.2" y1="322.5" x2="901.8" y2="250.0" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="590" y1="430" x2="776.2" y2="537.5" stroke="var(--m3)" stroke-width="2.5" opacity=".55"/>
+<line x1="590" y1="430" x2="590.0" y2="645.0" stroke="var(--m4)" stroke-width="2.5" opacity=".55"/>
+<line x1="590" y1="430" x2="403.8" y2="537.5" stroke="var(--m5)" stroke-width="2.5" opacity=".55"/>
+<line x1="403.8" y1="537.5" x2="278.2" y2="610.0" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="590" y1="430" x2="403.8" y2="322.5" stroke="var(--m6)" stroke-width="2.5" opacity=".55"/>
+<line x1="403.8" y1="322.5" x2="256.2" y2="295.1" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="403.8" y1="322.5" x2="306.3" y2="208.4" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="3,3"/>
+<circle cx="590" cy="430" r="78" style="fill:var(--surface);stroke:var(--accent)" stroke-width="2.5"/><text x="590" y="422" text-anchor="middle" font-size="15.5" font-weight="700" style="fill:var(--ink)">CODE QUEST</text><text x="590" y="442" text-anchor="middle" font-size="15.5" font-weight="700" style="fill:var(--ink)">BNCC</text><text x="590" y="460" text-anchor="middle" font-size="10.5" style="fill:var(--ink-muted)">TURMA01</text>
+<g><circle cx="590.0" cy="215.0" r="53.8" style="fill:var(--m1)" opacity=".16"/><circle cx="590.0" cy="215.0" r="53.8" style="fill:none;stroke:var(--m1)" stroke-width="2"/><text x="590.0" y="213.0" text-anchor="middle" font-size="19" font-weight="700" style="fill:var(--ink)">🖱️ M1</text><text x="590.0" y="231.0" text-anchor="middle" font-size="10.5" style="fill:var(--ink-muted)">9/10 · 84 tent.</text></g>
+<g><circle cx="776.2" cy="322.5" r="51.6" style="fill:var(--m2)" opacity=".16"/><circle cx="776.2" cy="322.5" r="51.6" style="fill:none;stroke:var(--m2)" stroke-width="2"/><text x="776.2" y="320.5" text-anchor="middle" font-size="19" font-weight="700" style="fill:var(--ink)">⌨️ M2</text><text x="776.2" y="338.5" text-anchor="middle" font-size="10.5" style="fill:var(--ink-muted)">8/10 · 88 tent.</text></g>
+<g><circle cx="776.2" cy="537.5" r="51.6" style="fill:var(--m3)" opacity=".16"/><circle cx="776.2" cy="537.5" r="51.6" style="fill:none;stroke:var(--m3)" stroke-width="2"/><text x="776.2" y="535.5" text-anchor="middle" font-size="19" font-weight="700" style="fill:var(--ink)">🖥️ M3</text><text x="776.2" y="553.5" text-anchor="middle" font-size="10.5" style="fill:var(--ink-muted)">8/10 · 93 tent.</text></g>
+<g><circle cx="590.0" cy="645.0" r="51.6" style="fill:var(--m4)" opacity=".16"/><circle cx="590.0" cy="645.0" r="51.6" style="fill:none;stroke:var(--m4)" stroke-width="2"/><text x="590.0" y="643.0" text-anchor="middle" font-size="19" font-weight="700" style="fill:var(--ink)">🌐 M4</text><text x="590.0" y="661.0" text-anchor="middle" font-size="10.5" style="fill:var(--ink-muted)">8/10 · 82 tent.</text></g>
+<g><circle cx="403.8" cy="537.5" r="51.6" style="fill:var(--m5)" opacity=".16"/><circle cx="403.8" cy="537.5" r="51.6" style="fill:none;stroke:var(--m5)" stroke-width="2"/><text x="403.8" y="535.5" text-anchor="middle" font-size="19" font-weight="700" style="fill:var(--ink)">🔗 M5</text><text x="403.8" y="553.5" text-anchor="middle" font-size="10.5" style="fill:var(--ink-muted)">8/10 · 81 tent.</text></g>
+<g><circle cx="403.8" cy="322.5" r="51.6" style="fill:var(--m6)" opacity=".16"/><circle cx="403.8" cy="322.5" r="51.6" style="fill:none;stroke:var(--m6)" stroke-width="2"/><text x="403.8" y="320.5" text-anchor="middle" font-size="19" font-weight="700" style="fill:var(--ink)">✍️ M6</text><text x="403.8" y="338.5" text-anchor="middle" font-size="10.5" style="fill:var(--ink-muted)">8/10 · 135 tent.</text></g>
+<g><circle cx="590.0" cy="70.0" r="4.5" style="fill:var(--m1)"/><text x="598.0" y="65.0" text-anchor="start" font-size="12.5" font-weight="600" style="fill:var(--ink)">Duplo Clique</text><text x="598.0" y="80.0" text-anchor="start" font-size="10.5" style="fill:var(--critical)">erro médio 9.22</text></g>
+<g><circle cx="901.8" cy="250.0" r="4.5" style="fill:var(--m2)"/><text x="909.8" y="245.0" text-anchor="start" font-size="12.5" font-weight="600" style="fill:var(--ink)">Copiar e Colar</text><text x="909.8" y="260.0" text-anchor="start" font-size="10.5" style="fill:var(--critical)">erro médio 18.89</text></g>
+<g><circle cx="278.2" cy="610.0" r="4.5" style="fill:var(--m5)"/><text x="270.2" y="605.0" text-anchor="end" font-size="12.5" font-weight="600" style="fill:var(--ink)">Desafio Detetive</text><text x="270.2" y="620.0" text-anchor="end" font-size="10.5" style="fill:var(--critical)">erro médio 5.12</text></g>
+<g><circle cx="256.2" cy="295.1" r="4.5" style="fill:var(--m6)"/><text x="248.2" y="290.1" text-anchor="end" font-size="12.5" font-weight="600" style="fill:var(--ink)">Acento Circunflexo</text><text x="248.2" y="305.1" text-anchor="end" font-size="10.5" style="fill:var(--critical)">erro médio 61.29</text></g>
+<g><circle cx="306.3" cy="208.4" r="4.5" style="fill:var(--m6)"/><text x="298.3" y="203.4" text-anchor="end" font-size="12.5" font-weight="600" style="fill:var(--ink)">Acento Agudo</text><text x="298.3" y="218.4" text-anchor="end" font-size="10.5" style="fill:var(--critical)">erro médio 49.00</text></g>
+</svg></div>
+    </section>
+    
+    
+    <section id="todas-atividades">
+      <div class="section-head">
+        <span class="eyebrow" style="color:var(--ink-muted)">Referência completa</span>
+        <h2>Todas as atividades com registro</h2>
+        <p>70 atividades tiveram pelo menos uma tentativa registrada nesta turma.</p>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Atividade</th><th>Módulo</th><th class="num">Tentativas</th><th class="num">Erro médio</th><th class="num">Tempo médio</th><th class="num">% concluiu</th></tr></thead>
+        <tbody><tr>
+          <td class="name">Clique Certeiro</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m1) 16%, transparent);color:var(--m1-text)">M1</span></td>
+          <td class="num">10</td>
+          <td class="num">0.00</td>
+          <td class="num">51s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Abrir um Programa</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m1) 16%, transparent);color:var(--m1-text)">M1</span></td>
+          <td class="num">8</td>
+          <td class="num">0.38</td>
+          <td class="num">29s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Duplo Clique</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m1) 16%, transparent);color:var(--m1-text)">M1</span></td>
+          <td class="num">9</td>
+          <td class="num">9.22</td>
+          <td class="num">54s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Explorador de Arquivos</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m1) 16%, transparent);color:var(--m1-text)">M1</span></td>
+          <td class="num">7</td>
+          <td class="num">0.57</td>
+          <td class="num">150s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Botão Direito</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m1) 16%, transparent);color:var(--m1-text)">M1</span></td>
+          <td class="num">8</td>
+          <td class="num">0.25</td>
+          <td class="num">69s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Lixeira</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m1) 16%, transparent);color:var(--m1-text)">M1</span></td>
+          <td class="num">8</td>
+          <td class="num">0.00</td>
+          <td class="num">34s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Rolar a Página</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m1) 16%, transparent);color:var(--m1-text)">M1</span></td>
+          <td class="num">8</td>
+          <td class="num">0.38</td>
+          <td class="num">42s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Selecionar Vários</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m1) 16%, transparent);color:var(--m1-text)">M1</span></td>
+          <td class="num">8</td>
+          <td class="num">4.12</td>
+          <td class="num">65s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Redimensionar Janela</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m1) 16%, transparent);color:var(--m1-text)">M1</span></td>
+          <td class="num">9</td>
+          <td class="num">0.00</td>
+          <td class="num">31s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Caminho do Mouse</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m1) 16%, transparent);color:var(--m1-text)">M1</span></td>
+          <td class="num">9</td>
+          <td class="num">1.33</td>
+          <td class="num">22s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Copiar com Ctrl+C</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m2) 16%, transparent);color:var(--m2-text)">M2</span></td>
+          <td class="num">8</td>
+          <td class="num">0.38</td>
+          <td class="num">165s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Desafio do Teclado</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m2) 16%, transparent);color:var(--m2-text)">M2</span></td>
+          <td class="num">9</td>
+          <td class="num">0.22</td>
+          <td class="num">150s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Colar com Ctrl+V</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m2) 16%, transparent);color:var(--m2-text)">M2</span></td>
+          <td class="num">9</td>
+          <td class="num">0.00</td>
+          <td class="num">77s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Copiar e Colar</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m2) 16%, transparent);color:var(--m2-text)">M2</span></td>
+          <td class="num">9</td>
+          <td class="num">18.89</td>
+          <td class="num">153s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Salvar com Ctrl+S</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m2) 16%, transparent);color:var(--m2-text)">M2</span></td>
+          <td class="num">9</td>
+          <td class="num">0.22</td>
+          <td class="num">78s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Selecionar Tudo</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m2) 16%, transparent);color:var(--m2-text)">M2</span></td>
+          <td class="num">9</td>
+          <td class="num">0.00</td>
+          <td class="num">29s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Desfazer com Ctrl+Z</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m2) 16%, transparent);color:var(--m2-text)">M2</span></td>
+          <td class="num">9</td>
+          <td class="num">0.89</td>
+          <td class="num">26s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Recortar com Ctrl+X</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m2) 16%, transparent);color:var(--m2-text)">M2</span></td>
+          <td class="num">8</td>
+          <td class="num">0.00</td>
+          <td class="num">80s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Copiar um E-mail</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m2) 16%, transparent);color:var(--m2-text)">M2</span></td>
+          <td class="num">9</td>
+          <td class="num">0.00</td>
+          <td class="num">52s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Editar e Salvar</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m2) 16%, transparent);color:var(--m2-text)">M2</span></td>
+          <td class="num">9</td>
+          <td class="num">0.89</td>
+          <td class="num">50s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Montar o PC</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m3) 16%, transparent);color:var(--m3-text)">M3</span></td>
+          <td class="num">9</td>
+          <td class="num">0.00</td>
+          <td class="num">49s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Desafio do PC</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m3) 16%, transparent);color:var(--m3-text)">M3</span></td>
+          <td class="num">8</td>
+          <td class="num">0.00</td>
+          <td class="num">46s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Entrada ou Saída?</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m3) 16%, transparent);color:var(--m3-text)">M3</span></td>
+          <td class="num">9</td>
+          <td class="num">0.00</td>
+          <td class="num">84s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Função de Cada Peça</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m3) 16%, transparent);color:var(--m3-text)">M3</span></td>
+          <td class="num">10</td>
+          <td class="num">0.00</td>
+          <td class="num">65s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">RAM ou HD?</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m3) 16%, transparent);color:var(--m3-text)">M3</span></td>
+          <td class="num">9</td>
+          <td class="num">0.00</td>
+          <td class="num">49s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Sistema Operacional</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m3) 16%, transparent);color:var(--m3-text)">M3</span></td>
+          <td class="num">11</td>
+          <td class="num">0.27</td>
+          <td class="num">32s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Conectar Periféricos</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m3) 16%, transparent);color:var(--m3-text)">M3</span></td>
+          <td class="num">10</td>
+          <td class="num">0.00</td>
+          <td class="num">27s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Local ou Nuvem?</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m3) 16%, transparent);color:var(--m3-text)">M3</span></td>
+          <td class="num">10</td>
+          <td class="num">0.00</td>
+          <td class="num">44s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Ligar o Computador</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m3) 16%, transparent);color:var(--m3-text)">M3</span></td>
+          <td class="num">9</td>
+          <td class="num">2.11</td>
+          <td class="num">52s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Resolver Problemas</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m3) 16%, transparent);color:var(--m3-text)">M3</span></td>
+          <td class="num">8</td>
+          <td class="num">1.12</td>
+          <td class="num">55s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Caminho da Mensagem</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m4) 16%, transparent);color:var(--m4-text)">M4</span></td>
+          <td class="num">7</td>
+          <td class="num">1.57</td>
+          <td class="num">30s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Desafio Final</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m4) 16%, transparent);color:var(--m4-text)">M4</span></td>
+          <td class="num">9</td>
+          <td class="num">1.44</td>
+          <td class="num">24s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Mensagem em Pedacinhos</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m4) 16%, transparent);color:var(--m4-text)">M4</span></td>
+          <td class="num">9</td>
+          <td class="num">1.89</td>
+          <td class="num">64s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Wi-Fi ou Fio?</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m4) 16%, transparent);color:var(--m4-text)">M4</span></td>
+          <td class="num">9</td>
+          <td class="num">0.44</td>
+          <td class="num">92s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Aparelhos da Casa</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m4) 16%, transparent);color:var(--m4-text)">M4</span></td>
+          <td class="num">8</td>
+          <td class="num">0.00</td>
+          <td class="num">64s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Endereço na Rede</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m4) 16%, transparent);color:var(--m4-text)">M4</span></td>
+          <td class="num">8</td>
+          <td class="num">1.88</td>
+          <td class="num">60s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Baixar ou Enviar?</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m4) 16%, transparent);color:var(--m4-text)">M4</span></td>
+          <td class="num">8</td>
+          <td class="num">1.00</td>
+          <td class="num">46s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Pedir e Receber</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m4) 16%, transparent);color:var(--m4-text)">M4</span></td>
+          <td class="num">8</td>
+          <td class="num">0.62</td>
+          <td class="num">52s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Por que Trava?</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m4) 16%, transparent);color:var(--m4-text)">M4</span></td>
+          <td class="num">9</td>
+          <td class="num">0.44</td>
+          <td class="num">30s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">No Aparelho ou Longe?</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m4) 16%, transparent);color:var(--m4-text)">M4</span></td>
+          <td class="num">7</td>
+          <td class="num">1.29</td>
+          <td class="num">52s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">HTTPS ou HTTP?</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m5) 16%, transparent);color:var(--m5-text)">M5</span></td>
+          <td class="num">8</td>
+          <td class="num">1.00</td>
+          <td class="num">57s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Desafio Detetive</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m5) 16%, transparent);color:var(--m5-text)">M5</span></td>
+          <td class="num">8</td>
+          <td class="num">5.12</td>
+          <td class="num">74s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Cadeado do Site</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m5) 16%, transparent);color:var(--m5-text)">M5</span></td>
+          <td class="num">8</td>
+          <td class="num">2.88</td>
+          <td class="num">34s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">URL Suspeita</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m5) 16%, transparent);color:var(--m5-text)">M5</span></td>
+          <td class="num">9</td>
+          <td class="num">0.89</td>
+          <td class="num">51s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Site Oficial</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m5) 16%, transparent);color:var(--m5-text)">M5</span></td>
+          <td class="num">8</td>
+          <td class="num">4.62</td>
+          <td class="num">38s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Download Perigoso</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m5) 16%, transparent);color:var(--m5-text)">M5</span></td>
+          <td class="num">8</td>
+          <td class="num">1.00</td>
+          <td class="num">75s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">E-mail ou Golpe?</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m5) 16%, transparent);color:var(--m5-text)">M5</span></td>
+          <td class="num">7</td>
+          <td class="num">0.57</td>
+          <td class="num">33s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Não Clique!</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m5) 16%, transparent);color:var(--m5-text)">M5</span></td>
+          <td class="num">7</td>
+          <td class="num">1.57</td>
+          <td class="num">37s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Senha no Site</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m5) 16%, transparent);color:var(--m5-text)">M5</span></td>
+          <td class="num">9</td>
+          <td class="num">1.56</td>
+          <td class="num">44s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Compartilhar Link</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m5) 16%, transparent);color:var(--m5-text)">M5</span></td>
+          <td class="num">9</td>
+          <td class="num">0.33</td>
+          <td class="num">29s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Palavras Simples</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">8</td>
+          <td class="num">9.12</td>
+          <td class="num">68s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Desafio de Frases</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num">21.00</td>
+          <td class="num">148s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Só Números</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">8</td>
+          <td class="num">1.12</td>
+          <td class="num">22s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Somas</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num">2.17</td>
+          <td class="num">60s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Subtrações</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num">0.50</td>
+          <td class="num">51s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Arroba @</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num">3.17</td>
+          <td class="num">65s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Hashtag #</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num">2.67</td>
+          <td class="num">40s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Porcentagem %</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num">2.00</td>
+          <td class="num">38s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Asterisco *</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num">3.67</td>
+          <td class="num">39s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">E comercial &amp;</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num">4.00</td>
+          <td class="num">42s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Parênteses ( )</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num">9.00</td>
+          <td class="num">66s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Letras Maiúsculas</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">8</td>
+          <td class="num">4.62</td>
+          <td class="num">51s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">! e Aspas &quot;</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num">16.00</td>
+          <td class="num">94s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Com Espaço</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">8</td>
+          <td class="num">2.00</td>
+          <td class="num">53s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Sem Espaço</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">8</td>
+          <td class="num">2.88</td>
+          <td class="num">44s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Acento Agudo</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">8</td>
+          <td class="num">49.00</td>
+          <td class="num">120s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Acento Circunflexo</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">7</td>
+          <td class="num">61.29</td>
+          <td class="num">204s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Til ~</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">7</td>
+          <td class="num">15.43</td>
+          <td class="num">68s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Cedilha ç</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">7</td>
+          <td class="num">10.43</td>
+          <td class="num">54s</td>
+          <td class="num">100%</td>
+        </tr><tr>
+          <td class="name">Frase Completa</td>
+          <td><span class="mod-chip" style="background:color-mix(in srgb, var(--m6) 16%, transparent);color:var(--m6-text)">M6</span></td>
+          <td class="num">6</td>
+          <td class="num">9.17</td>
+          <td class="num">70s</td>
+          <td class="num">100%</td>
+        </tr></tbody>
+      </table></div>
+    </section>
+    
+    
+    <div class="notes">
+      <p><b>Limpeza de dados:</b> 770 tentativas brutas registradas pelo jogo; 207 eram reenvios duplicados idênticos (mesmo erro e tempo, causados por reenvio automático do app) e foram removidos antes desta análise — restaram 563 tentativas válidas.</p>
+      <p><b>Cadastros:</b> nenhum cadastro duplicado ou inativo foi encontrado nesta turma.</p>
+      <p><b>Atividades concluídas x tentativas:</b> o número de "atividades concluídas" vem do registro oficial de progresso; já erro médio e tempo médio vêm do log de tentativas, que nem sempre cobre 100% das conclusões — os dois números não precisam bater exatamente.</p>
+      <p><b>Janela de dados:</b> registros de 02/09 03:25 a 16/09 12:58.</p>
+    </div>
+    
+    
+</div>
+</body></html>
