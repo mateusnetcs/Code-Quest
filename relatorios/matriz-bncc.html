@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matriz Interativa BNCC Computação - Diagnóstico e Recuperação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-active { border-bottom: 3px solid #6366f1; color: #4f46e5; font-weight: 600; }
+        .dark .tab-active { border-bottom: 3px solid #818cf8; color: #818cf8; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200 min-h-screen flex flex-col">
+
+    <!-- Header / Barra Superior -->
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white">Matriz Diagnóstica • BNCC Computação</h1>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Mapeamento de Habilidades, Eixos Cognitivos e Descritores para Recuperação</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 self-end sm:self-auto">
+                <button onclick="exportCSV()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Exportar CSV
+                </button>
+                <button onclick="toggleTheme()" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition" title="Alternar Tema">
+                    <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navegação de Abas -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex gap-6 border-t border-slate-100 dark:border-slate-800/60 overflow-x-auto">
+            <button onclick="switchView('fluxograma')" id="tab-fluxograma" class="py-3 text-sm whitespace-nowrap tab-active transition">
+                1. Fluxograma & Diagrama Visual
+            </button>
+            <button onclick="switchView('tabela')" id="tab-tabela" class="py-3 text-sm whitespace-nowrap text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition">
+                2. Tabela Matriz Completa
+            </button>
+            <button onclick="switchView('simulador')" id="tab-simulador" class="py-3 text-sm whitespace-nowrap text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition">
+                3. Guia Rápido de Recuperação
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- Banner Informativo -->
+        <div class="mb-6 p-4 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-start gap-3">
+                <div class="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-sm font-semibold text-indigo-950 dark:text-indigo-200">Dados reais do Code Quest BNCC (Turma01 + Turma02):</h2>
+                    <p class="text-xs sm:text-sm text-indigo-800 dark:text-indigo-300 mt-0.5">
+                        As 7 habilidades (<span class="font-mono font-bold">EF05CO05, EF05CO06, EF05CO07, EF05CO08, EF05CO11, EF06CO07, EF06CO08</span>) são as que o jogo efetivamente trabalha, mapeadas atividade a atividade. Pertencem a <strong>2 Eixos da BNCC</strong>: <span class="underline font-medium">Mundo Digital</span> (5 habilidades) e <span class="underline font-medium">Cultura Digital</span> (2 habilidades). Nenhuma delas é de Pensamento Computacional puro (programação/algoritmos). <strong>EF05CO07 concentra 71,3% de todo o erro registrado</strong> (3.963 de 5.560 erros nas 7 habilidades).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros Rápidos -->
+        <div class="mb-6 flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 mr-1">Filtrar por Eixo:</span>
+                <button onclick="filterData('TODOS')" data-filter="TODOS" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-sm transition">
+                    Todas (7)
+                </button>
+                <button onclick="filterData('Mundo Digital')" data-filter="Mundo Digital" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    🌐 Mundo Digital (5)
+                </button>
+                <button onclick="filterData('Cultura Digital')" data-filter="Cultura Digital" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    🛡️ Cultura Digital (2)
+                </button>
+            </div>
+
+            <div class="relative w-full sm:w-64">
+                <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="Buscar código, verbo ou assunto..." class="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute left-2.5 top-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- VIEW 1: FLUXOGRAMA & DIAGRAMA INTERATIVO -->
+        <section id="view-fluxograma" class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- Coluna Esquerda: Diagrama em Árvore (Eixo -> Habilidade) -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                            Árvore de Conexão (Clique para inspecionar)
+                        </h3>
+                        <div id="tree-container" class="space-y-5">
+                            <!-- Gerado via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna Direita: Raio-X Detalhado (Habilidade -> Eixo Cognitivo -> Descritores -> Recuperação) -->
+                <div class="lg:col-span-7">
+                    <div id="detail-card" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm sticky top-28">
+                        <!-- Gerado via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: TABELA MATRIZ COMPLETA -->
+        <section id="view-tabela" class="hidden">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                                <th class="py-3.5 px-4">Código & Ano</th>
+                                <th class="py-3.5 px-4">Eixo Temático (BNCC)</th>
+                                <th class="py-3.5 px-4">Eixo Cognitivo (Bloom)</th>
+                                <th class="py-3.5 px-4">Habilidade Oficial</th>
+                                <th class="py-3.5 px-4">Descritores Diagnósticos (O que avaliar)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="divide-y divide-slate-200 dark:divide-slate-800 text-sm">
+                            <!-- Gerado via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: GUIA RÁPIDO DE RECUPERAÇÃO -->
+        <section id="view-simulador" class="hidden space-y-6">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                <div class="max-w-3xl">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Diagnóstico de Dificuldade do Aluno</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                        Selecione abaixo a habilidade em que o aluno apresentou baixo desempenho na sua plataforma para visualizar o plano de recuperação direcionado por descritor.
+                    </p>
+                </div>
+
+                <div id="recovery-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <!-- Gerado via JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2.5 rounded-xl shadow-lg text-xs font-medium transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        Copiado com sucesso!
+    </div>
+
+    <script>
+        // Base de dados com os números reais do Code Quest BNCC (Turma01 + Turma02,
+        // tentativas duplicadas já removidas) e o texto oficial conferido direto no
+        // documento "Computação na Educação Básica — Complemento à BNCC" (2022).
+        const habilidadesData = [
+            {
+                codigo: "EF05CO05",
+                ano: "5º Ano EF",
+                eixoTematico: "Mundo Digital",
+                corEixo: "blue",
+                objetoConhecimento: "Arquitetura de computadores",
+                eixoCognitivo: "Nível 1: Lembrar / Compreender",
+                verboCognitivo: "Identificar",
+                descricaoOficial: "Identificar os componentes principais de um computador (dispositivos de entrada/saída, processadores e armazenamento).",
+                descritores: [
+                    { id: "D01", texto: "Diferenciar hardware (parte física) de software (parte lógica)." },
+                    { id: "D02", texto: "Classificar periféricos em dispositivos de entrada (teclado, mouse), saída (monitor, impressora) ou mistos." },
+                    { id: "D03", texto: "Reconhecer a função básica da CPU (processamento) e das memórias (armazenamento temporário vs. permanente)." }
+                ],
+                dadosReais: "0 erros em 86 tentativas — a única das 7 habilidades sem nenhum erro registrado.",
+                dificuldadeComum: "Nenhum sinal de dificuldade nos dados reais: as 5 atividades do módulo Por Dentro do PC (Montar o PC, Entrada ou Saída?, Função de Cada Peça, Conectar Periféricos, Desafio do PC) somaram 86 tentativas sem um único erro nas duas turmas.",
+                acaoRecuperacao: "Não há gargalo real para atacar aqui. Se um aluno específico apresentar dificuldade, a atividade de rotulagem de peças já prevista é suficiente — não é prioridade de recuperação do grupo."
+            },
+            {
+                codigo: "EF05CO06",
+                ano: "5º Ano EF",
+                eixoTematico: "Mundo Digital",
+                corEixo: "blue",
+                objetoConhecimento: "Armazenamento de dados",
+                eixoCognitivo: "Nível 2: Compreender",
+                verboCognitivo: "Reconhecer",
+                descricaoOficial: "Reconhecer que os dados podem ser armazenados em um dispositivo local ou remoto.",
+                descritores: [
+                    { id: "D04", texto: "Diferenciar armazenamento local (HD, SSD, pen drive — dentro do próprio computador) de armazenamento remoto (nuvem, outro computador na rede)." },
+                    { id: "D05", texto: "Reconhecer exemplos de serviço de armazenamento remoto (ex: Google Drive) e quando cada tipo é mais indicado." }
+                ],
+                dadosReais: "0 erros em 35 tentativas — também sem nenhum erro registrado.",
+                dificuldadeComum: "Mesmo padrão de EF05CO05: as 2 atividades do módulo Por Dentro do PC (RAM ou HD?, Local ou Nuvem?) somaram 35 tentativas sem nenhum erro nas duas turmas.",
+                acaoRecuperacao: "Sem gargalo real para priorizar. Manter como está e focar o tempo de recuperação nas habilidades abaixo, que concentram praticamente todo o erro do currículo."
+            },
+            {
+                codigo: "EF05CO07",
+                ano: "5º Ano EF",
+                eixoTematico: "Mundo Digital",
+                corEixo: "blue",
+                objetoConhecimento: "Sistema operacional",
+                eixoCognitivo: "Nível 2: Compreender / Analisar",
+                verboCognitivo: "Reconhecer",
+                descricaoOficial: "Reconhecer a necessidade de um sistema operacional para a execução de programas e gerenciamento do hardware.",
+                descritores: [
+                    { id: "D06", texto: "Explicar o papel do Sistema Operacional como intermediário entre usuário, aplicativos e hardware." },
+                    { id: "D07", texto: "Operar com precisão as ações básicas de mouse e teclado que o Sistema Operacional gerencia: clique, duplo clique, digitação de caracteres." }
+                ],
+                dadosReais: "3.963 erros em 506 tentativas — de longe a mais prejudicada: 71,3% de todo o erro das 7 habilidades.",
+                dificuldadeComum: "Concentrado em digitação de caracteres especiais do módulo Mestre da Digitação: Acento Circunflexo (1.037 erros em 16 tentativas), Acento Agudo (752), E comercial '&' (252), Palavras com Maiúsculas (172), Til (167). Fora da digitação, Duplo Clique (202 erros, módulo Mestre do Mouse) também se destaca.",
+                acaoRecuperacao: "Prioridade #1 de recuperação: oficina de acentuação no teclado (circunflexo e agudo primeiro — concentram 45% do erro desta habilidade), antes de qualquer outro reforço. É o maior gargalo isolado de todo o currículo do jogo."
+            },
+            {
+                codigo: "EF05CO08",
+                ano: "5º Ano EF",
+                eixoTematico: "Cultura Digital",
+                corEixo: "emerald",
+                objetoConhecimento: "Segurança e responsabilidade no uso da tecnologia",
+                eixoCognitivo: "Nível 3: Analisar / Avaliar",
+                verboCognitivo: "Acessar / Distinguir",
+                descricaoOficial: "Acessar as informações na Internet de forma crítica para distinguir os conteúdos confiáveis de não confiáveis.",
+                descritores: [
+                    { id: "D08", texto: "Verificar sinais de confiabilidade de um site (endereço, cadeado/HTTPS, domínio oficial)." },
+                    { id: "D09", texto: "Reconhecer tentativas de golpe (links suspeitos, pedidos de senha, downloads não solicitados) e não interagir com elas." }
+                ],
+                dadosReais: "278 erros em 151 tentativas, 100% no módulo Links Seguros.",
+                dificuldadeComum: "Site Oficial (77 erros) e Desafio Detetive (57 erros, a atividade de síntese do módulo) concentram quase metade do erro — os alunos têm mais dificuldade em julgar se um site é confiável do que em identificar um golpe óbvio (E-mail ou Golpe? teve só 5 erros).",
+                acaoRecuperacao: "Reforçar com exemplos reais de sites oficiais x páginas falsas antes do Desafio Detetive, já que ele reúne tudo que foi visto nas atividades anteriores do módulo."
+            },
+            {
+                codigo: "EF05CO11",
+                ano: "5º Ano EF",
+                eixoTematico: "Cultura Digital",
+                corEixo: "emerald",
+                objetoConhecimento: "Uso de tecnologias computacionais",
+                eixoCognitivo: "Nível 3: Aplicar / Avaliar",
+                verboCognitivo: "Identificar",
+                descricaoOficial: "Identificar a adequação de diferentes tecnologias computacionais na resolução de problemas.",
+                descritores: [
+                    { id: "D10", texto: "Reconhecer que problemas diferentes pedem ferramentas diferentes (ex: criar uma história em quadrinhos no computador x fazer uma ligação no celular)." },
+                    { id: "D11", texto: "Combinar, numa mesma tarefa, mais de uma habilidade já aprendida (ex: digitar frase inteira com pontuação, não só uma tecla isolada)." }
+                ],
+                dadosReais: "716 erros em 76 tentativas — 2ª habilidade mais prejudicada (12,9% do erro total).",
+                dificuldadeComum: "Quase todo o erro (96%) está em 2 atividades: Desafio de Frases (363 erros em 13 tentativas) e '! e Aspas \"' (323 erros). São os desafios que exigem combinar várias teclas/símbolos numa frase inteira — diferente de digitar um símbolo isolado, que tem pouco erro em outras habilidades.",
+                acaoRecuperacao: "Antes do Desafio de Frases, confirmar que cada símbolo usado nele (!, \", acentos) já foi treinado isoladamente — o erro aparece na combinação, não nos símbolos em separado."
+            },
+            {
+                codigo: "EF06CO07",
+                ano: "6º Ano EF",
+                eixoTematico: "Mundo Digital",
+                corEixo: "blue",
+                objetoConhecimento: "Armazenamento e Transmissão de dados — Fundamentos de transmissão de dados",
+                eixoCognitivo: "Nível 2: Compreender",
+                verboCognitivo: "Entender",
+                descricaoOficial: "Entender o processo de transmissão de dados, como a informação é quebrada em pedaços, transmitida em pacotes através de múltiplos equipamentos, e reconstruída no destino.",
+                descritores: [
+                    { id: "D12", texto: "Compreender que uma mensagem/arquivo é dividido em pacotes menores para viajar pela rede." },
+                    { id: "D13", texto: "Identificar que a informação passa por múltiplos equipamentos (roteador, torres, servidores) até chegar ao destino e ser remontada." }
+                ],
+                dadosReais: "180 erros em 161 tentativas, distribuídos entre as 10 atividades do módulo Viagem na Internet.",
+                dificuldadeComum: "Erro disperso, sem um gargalo isolado: nenhuma atividade passa de 23% do erro da habilidade. Endereço na Rede (41 erros) e Mensagem em Pedacinhos (38) lideram, mas por pouca margem — Aparelhos da Casa teve 0 erro em 16 tentativas.",
+                acaoRecuperacao: "Como o erro é espalhado, vale reforçar o conceito geral (como a internet transmite dados em pedaços) antes do módulo inteiro, em vez de focar numa atividade específica."
+            },
+            {
+                codigo: "EF06CO08",
+                ano: "6º Ano EF",
+                eixoTematico: "Mundo Digital",
+                corEixo: "blue",
+                objetoConhecimento: "Armazenamento e Transmissão de dados — Gestão de dados",
+                eixoCognitivo: "Nível 2: Compreender / Aplicar",
+                verboCognitivo: "Compreender / Utilizar",
+                descricaoOficial: "Compreender e utilizar diferentes formas de armazenar, manipular, compactar e recuperar arquivos, documentos e metadados.",
+                descritores: [
+                    { id: "D14", texto: "Manipular arquivos com os atalhos corretos: copiar, colar e recortar sem perder o conteúdo." },
+                    { id: "D15", texto: "Salvar, organizar e localizar/recuperar um arquivo ou documento editado anteriormente." }
+                ],
+                dadosReais: "423 erros em 128 tentativas, 80% concentrados numa única atividade.",
+                dificuldadeComum: "Copiar e Colar (337 erros em 19 tentativas) é disparado o gargalo — a atividade com mais erro por tentativa de toda a habilidade. As demais (Editar e Salvar: 44, Rolar a Página: 16, Explorador de Arquivos: 11, Salvar com Ctrl+S: 11, Lixeira: 4, Recortar: 0) têm bem menos erro.",
+                acaoRecuperacao: "Copiar e Colar merece uma atividade extra de prática livre de Ctrl+C/Ctrl+V antes de seguir pro resto do módulo Atalhos Mágicos — é o único ponto realmente crítico desta habilidade."
+            }
+        ];
+
+        let selectedCodigo = "EF05CO05";
+        let currentFilter = "TODOS";
+        let searchQuery = "";
+
+        // Inicialização
+        document.addEventListener("DOMContentLoaded", () => {
+            renderAll();
+        });
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        function switchView(viewName) {
+            ['fluxograma', 'tabela', 'simulador'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
+                const tab = document.getElementById(`tab-${v}`);
+                tab.classList.remove('tab-active');
+                tab.classList.add('text-slate-500', 'dark:text-slate-400');
+            });
+
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            const activeTab = document.getElementById(`tab-${viewName}`);
+            activeTab.classList.add('tab-active');
+            activeTab.classList.remove('text-slate-500', 'dark:text-slate-400');
+        }
+
+        function filterData(eixo) {
+            currentFilter = eixo;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.filter === eixo) {
+                    btn.className = "filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-sm transition";
+                } else {
+                    btn.className = "filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition";
+                }
+            });
+            renderAll();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            renderAll();
+        }
+
+        function getFilteredData() {
+            return habilidadesData.filter(item => {
+                const matchEixo = currentFilter === "TODOS" || item.eixoTematico === currentFilter;
+                const matchSearch = !searchQuery ||
+                    item.codigo.toLowerCase().includes(searchQuery) ||
+                    item.descricaoOficial.toLowerCase().includes(searchQuery) ||
+                    item.eixoCognitivo.toLowerCase().includes(searchQuery) ||
+                    item.objetoConhecimento.toLowerCase().includes(searchQuery) ||
+                    item.descritores.some(d => d.texto.toLowerCase().includes(searchQuery));
+                return matchEixo && matchSearch;
+            });
+        }
+
+        function selectHabilidade(codigo) {
+            selectedCodigo = codigo;
+            renderTree();
+            renderDetailCard();
+        }
+
+        function renderAll() {
+            const filtered = getFilteredData();
+            if (filtered.length > 0 && !filtered.some(i => i.codigo === selectedCodigo)) {
+                selectedCodigo = filtered[0].codigo;
+            }
+            renderTree();
+            renderDetailCard();
+            renderTable();
+            renderRecoveryGrid();
+        }
+
+        // Renderiza a Árvore / Fluxograma à esquerda
+        function renderTree() {
+            const container = document.getElementById('tree-container');
+            const filtered = getFilteredData();
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-500 py-4 text-center">Nenhuma habilidade encontrada com os filtros atuais.</p>`;
+                return;
+            }
+
+            // Agrupar por Eixo Temático
+            const grupos = {};
+            filtered.forEach(item => {
+                if (!grupos[item.eixoTematico]) grupos[item.eixoTematico] = [];
+                grupos[item.eixoTematico].push(item);
+            });
+
+            let html = '';
+            for (const [eixo, items] of Object.entries(grupos)) {
+                const isMundo = eixo === "Mundo Digital";
+                const badgeColor = isMundo
+                    ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 border-blue-200 dark:border-blue-800"
+                    : "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
+                const lineColor = isMundo ? "border-blue-300 dark:border-blue-800" : "border-emerald-300 dark:border-emerald-800";
+
+                html += `
+                    <div class="space-y-2">
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-bold ${badgeColor}">
+                            <span>${isMundo ? '🌐' : '🛡️'} Eixo: ${eixo}</span>
+                            <span class="px-1.5 py-0.5 rounded-full bg-white/70 dark:bg-black/30 text-[10px]">${items.length}</span>
+                        </div>
+                        <div class="ml-4 pl-4 border-l-2 ${lineColor} space-y-2.5 pt-1">
+                            ${items.map(hab => {
+                                const isSelected = hab.codigo === selectedCodigo;
+                                return `
+                                    <button onclick="selectHabilidade('${hab.codigo}')" class="w-full text-left p-3 rounded-xl border transition-all flex items-center justify-between gap-2 group ${
+                                        isSelected
+                                        ? 'bg-indigo-50/90 dark:bg-indigo-950/60 border-indigo-500 shadow-sm ring-1 ring-indigo-500'
+                                        : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/80 hover:border-indigo-300 dark:hover:border-indigo-700'
+                                    }">
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="font-mono font-bold text-xs px-2 py-0.5 rounded bg-slate-900 text-white dark:bg-indigo-600">${hab.codigo}</span>
+                                                <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400">${hab.ano}</span>
+                                            </div>
+                                            <p class="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5 line-clamp-1">${hab.objetoConhecimento}</p>
+                                            <p class="text-[11px] text-indigo-600 dark:text-indigo-400 mt-0.5 font-medium">🧠 ${hab.eixoCognitivo}</p>
+                                        </div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 group-hover:text-indigo-500 transition ${isSelected ? 'text-indigo-600 translate-x-0.5' : ''}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Renderiza o Card Detalhado de Fluxo à direita
+        function renderDetailCard() {
+            const container = document.getElementById('detail-card');
+            const hab = habilidadesData.find(h => h.codigo === selectedCodigo) || habilidadesData[0];
+            const isMundo = hab.eixoTematico === "Mundo Digital";
+
+            container.innerHTML = `
+                <!-- Cabeçalho do Fluxo -->
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-200 dark:border-slate-800">
+                    <div class="flex items-center gap-2.5">
+                        <span class="font-mono text-base font-extrabold px-3 py-1 rounded-lg bg-indigo-600 text-white shadow-sm">${hab.codigo}</span>
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">${hab.ano}</span>
+                    </div>
+                    <button onclick="copySummary('${hab.codigo}')" class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Copiar Ficha
+                    </button>
+                </div>
+
+                <!-- Fluxo Visual em 3 Etapas -->
+                <div class="mt-5 space-y-4">
+
+                    <!-- Passo 1: Eixos Conectados -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="p-3.5 rounded-xl border ${isMundo ? 'bg-blue-50/70 border-blue-200 dark:bg-blue-950/30 dark:border-blue-800/70' : 'bg-emerald-50/70 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800/70'}">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block">1. Eixo Temático (BNCC)</span>
+                            <span class="text-sm font-bold mt-1 block ${isMundo ? 'text-blue-800 dark:text-blue-300' : 'text-emerald-800 dark:text-emerald-300'}">
+                                ${isMundo ? '🌐' : '🛡️'} ${hab.eixoTematico}
+                            </span>
+                            <span class="text-xs text-slate-600 dark:text-slate-400 mt-0.5 block">Objeto: ${hab.objetoConhecimento}</span>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl border bg-purple-50/70 border-purple-200 dark:bg-purple-950/30 dark:border-purple-800/70">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block">2. Eixo Cognitivo (Bloom)</span>
+                            <span class="text-sm font-bold text-purple-800 dark:text-purple-300 mt-1 block">🧠 ${hab.eixoCognitivo}</span>
+                            <span class="text-xs text-slate-600 dark:text-slate-400 mt-0.5 block">Verbo-chave: <strong>${hab.verboCognitivo}</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Seta de Conexão -->
+                    <div class="flex justify-center">
+                        <div class="px-3 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                            ↓ Desdobra-se na Habilidade Oficial
+                        </div>
+                    </div>
+
+                    <!-- Passo 2: Texto Oficial da Habilidade -->
+                    <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Descrição Oficial (BNCC Computação)</span>
+                        <p class="text-sm font-medium text-slate-800 dark:text-slate-100 leading-relaxed">"${hab.descricaoOficial}"</p>
+                    </div>
+
+                    <!-- Seta de Conexão -->
+                    <div class="flex justify-center">
+                        <div class="px-3 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950 text-[11px] font-semibold text-indigo-600 dark:text-indigo-400">
+                            ↓ Que é avaliada pelos seguintes Descritores Diagnósticos
+                        </div>
+                    </div>
+
+                    <!-- Passo 3: Descritores -->
+                    <div class="space-y-2.5">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">3. Descritores Vinculados (Critérios de Avaliação)</h4>
+                        ${hab.descritores.map(desc => `
+                            <div class="flex items-start gap-3 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-xs">
+                                <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 shrink-0 mt-0.5">${desc.id}</span>
+                                <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">${desc.texto}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Passo 4: Dados reais do jogo -->
+                    <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 grid grid-cols-1 gap-3">
+                        <div class="p-3.5 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/60">
+                            <span class="text-xs font-bold text-indigo-800 dark:text-indigo-300 flex items-center gap-1.5">
+                                📊 Dados reais do Code Quest (Turma01 + Turma02):
+                            </span>
+                            <p class="text-xs text-indigo-900/90 dark:text-indigo-200/90 mt-1">${hab.dadosReais}</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60">
+                            <span class="text-xs font-bold text-rose-800 dark:text-rose-300 flex items-center gap-1.5">
+                                ⚠️ Onde o aluno costuma travar:
+                            </span>
+                            <p class="text-xs text-rose-900/90 dark:text-rose-200/90 mt-1">${hab.dificuldadeComum}</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-teal-50/70 dark:bg-teal-950/30 border border-teal-200 dark:border-teal-800/60">
+                            <span class="text-xs font-bold text-teal-800 dark:text-teal-300 flex items-center gap-1.5">
+                                🎯 Como recuperar o conteúdo:
+                            </span>
+                            <p class="text-xs text-teal-900/90 dark:text-teal-200/90 mt-1">${hab.acaoRecuperacao}</p>
+                        </div>
+                    </div>
+
+                </div>
+            `;
+        }
+
+        // Renderiza a Tabela Completa
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            const filtered = getFilteredData();
+
+            tbody.innerHTML = filtered.map(hab => {
+                const isMundo = hab.eixoTematico === "Mundo Digital";
+                return `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition align-top">
+                        <td class="py-4 px-4 whitespace-nowrap">
+                            <span class="font-mono font-bold text-xs px-2.5 py-1 rounded bg-indigo-600 text-white block w-fit">${hab.codigo}</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400 mt-1.5 block">${hab.ano}</span>
+                        </td>
+                        <td class="py-4 px-4">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold ${
+                                isMundo
+                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300'
+                                : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300'
+                            }">
+                                ${isMundo ? '🌐' : '🛡️'} ${hab.eixoTematico}
+                            </span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400 block mt-1.5">${hab.objetoConhecimento}</span>
+                        </td>
+                        <td class="py-4 px-4">
+                            <span class="text-xs font-bold text-purple-700 dark:text-purple-300 block">${hab.eixoCognitivo}</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400 mt-1 block">Verbo: <strong>${hab.verboCognitivo}</strong></span>
+                        </td>
+                        <td class="py-4 px-4 max-w-xs">
+                            <p class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">${hab.descricaoOficial}</p>
+                        </td>
+                        <td class="py-4 px-4 max-w-md">
+                            <ul class="space-y-1.5">
+                                ${hab.descritores.map(d => `
+                                    <li class="text-xs text-slate-700 dark:text-slate-300 flex items-start gap-1.5">
+                                        <span class="font-mono font-bold text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 shrink-0">${d.id}</span>
+                                        <span>${d.texto}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Renderiza os Cards de Recuperação
+        function renderRecoveryGrid() {
+            const grid = document.getElementById('recovery-grid');
+            const filtered = getFilteredData();
+
+            grid.innerHTML = filtered.map(hab => `
+                <div class="p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 flex flex-col justify-between gap-4">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-mono font-bold text-xs px-2.5 py-1 rounded bg-slate-900 dark:bg-indigo-600 text-white">${hab.codigo}</span>
+                                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">${hab.eixoTematico}</span>
+                            </div>
+                            <span class="text-[11px] font-medium px-2 py-0.5 rounded bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300">${hab.eixoCognitivo}</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-900 dark:text-white mt-2">${hab.objetoConhecimento}</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">${hab.descricaoOficial}</p>
+
+                        <div class="mt-3 pt-3 border-t border-slate-200/80 dark:border-slate-700/80 space-y-2">
+                            <p class="text-xs"><strong class="text-indigo-600 dark:text-indigo-400">Dados reais:</strong> <span class="text-slate-700 dark:text-slate-300">${hab.dadosReais}</span></p>
+                            <p class="text-xs"><strong class="text-rose-600 dark:text-rose-400">Sintoma (Erro do aluno):</strong> <span class="text-slate-700 dark:text-slate-300">${hab.dificuldadeComum}</span></p>
+                            <p class="text-xs"><strong class="text-teal-600 dark:text-teal-400">Intervenção Recomendada:</strong> <span class="text-slate-700 dark:text-slate-300">${hab.acaoRecuperacao}</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-2.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                        <span class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Descritores a reavaliar:</span>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${hab.descritores.map(d => `<span class="text-[11px] font-mono bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 px-2 py-0.5 rounded" title="${d.texto}">${d.id}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function copySummary(codigo) {
+            const hab = habilidadesData.find(h => h.codigo === codigo);
+            if (!hab) return;
+            const text = `${hab.codigo} (${hab.ano})\nEixo Temático: ${hab.eixoTematico}\nEixo Cognitivo: ${hab.eixoCognitivo}\nHabilidade: ${hab.descricaoOficial}\nDados reais: ${hab.dadosReais}\nDescritores:\n${hab.descritores.map(d => `- ${d.id}: ${d.texto}`).join('\n')}`;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            showToast(`Ficha de ${hab.codigo} copiada para a área de transferência!`);
+        }
+
+        function exportCSV() {
+            const headers = ["Codigo", "Ano", "Eixo_Tematico", "Objeto_Conhecimento", "Eixo_Cognitivo", "Habilidade_Oficial", "Dados_Reais", "Descritores", "Acao_Recuperacao"];
+            const rows = habilidadesData.map(h => [
+                h.codigo,
+                h.ano,
+                h.eixoTematico,
+                `"${h.objetoConhecimento}"`,
+                `"${h.eixoCognitivo}"`,
+                `"${h.descricaoOficial}"`,
+                `"${h.dadosReais}"`,
+                `"${h.descritores.map(d => `${d.id}: ${d.texto}`).join(' | ')}"`,
+                `"${h.acaoRecuperacao}"`
+            ]);
+
+            const csvContent = "﻿" + [headers.join(";"), ...rows.map(e => e.join(";"))].join("\n");
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "matriz_bncc_computacao_diagnostico.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Arquivo CSV exportado com sucesso!");
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
