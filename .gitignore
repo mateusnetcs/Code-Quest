@@ -1,0 +1,44 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente / segredos
+.env
+.env.local
+.env.*.local
+
+# Banco local (dev antigo em PHP/SQLite) — não usado em produção
+api/data/
+*.sqlite
+
+# Vercel
+.vercel
+
+# Arquivos pessoais / de outros projetos neste mesmo diretório de trabalho
+cpp/
+csharp/
+javascript/
+certificados/
+banner/
+nomes.md
+api/nomes.md
+corpo do certififcado.md
+BNCCComputaoCompletodiagramado.pdf
+banner-thumbs.jpg
+.~lock.*#
+*.docx
+*.pptx
+
+# Relatórios/gráficos em rascunho (ainda não publicados em relatorios/)
+diario-expedicao.html
+diario-expedicao-turma02.html
+diario-expedicao-comparacao.html
+desempenho-alunos.html
+relatorio-habilidades.html
+opcoes-grafico.html
+habilidades-poster.html
+habilidades-poster.png
+habilidades-top3.png
+donut-habilidades.html
+donut-habilidades.png
+donut-habilidades-poster.html
+donut-habilidades-poster.png
