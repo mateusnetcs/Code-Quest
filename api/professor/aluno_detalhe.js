@@ -15,27 +15,34 @@ module.exports = async (req, res) => {
   const ids = (await professorOficinas(auth.usuario)).map((o) => o.id);
   if (!ids.length) return fail(res, 'Nenhuma oficina disponível.', 403);
 
-  const { rows } = await pdo.query(
-    `SELECT a.id, a.nome, a.criado_em, a.tenant_id, t.codigo AS oficina_codigo
-     FROM alunos a JOIN tenants t ON t.id = a.tenant_id
-     WHERE a.id = $1 AND a.tenant_id = ANY($2::bigint[])`,
-    [alunoId, ids]
-  );
-  const aluno = rows[0];
-  if (!aluno) return fail(res, 'Aluno não encontrado.', 404);
-  aluno.id = Number(aluno.id);
-  aluno.tenant_id = Number(aluno.tenant_id);
+  const { data: row } = await pdo
+    .from('alunos')
+    .select('id, nome, criado_em, tenant_id, tenants(codigo)')
+    .eq('id', alunoId)
+    .in('tenant_id', ids)
+    .maybeSingle();
+  if (!row) return fail(res, 'Aluno não encontrado.', 404);
 
-  const { rows: progresso } = await pdo.query(
-    'SELECT atividade_key, modulo_id, atividade_id, xp, concluido_em FROM progresso WHERE aluno_id = $1 ORDER BY concluido_em',
-    [alunoId]
-  );
+  const aluno = {
+    id: row.id,
+    nome: row.nome,
+    criado_em: row.criado_em,
+    tenant_id: row.tenant_id,
+    oficina_codigo: row.tenants.codigo,
+  };
 
-  const { rows: tentativas } = await pdo.query(
-    `SELECT atividade_key, modulo_id, skill, erros, tempo_ms, concluiu, criado_em
-     FROM tentativas WHERE aluno_id = $1 ORDER BY criado_em DESC LIMIT 200`,
-    [alunoId]
-  );
+  const { data: progresso } = await pdo
+    .from('progresso')
+    .select('atividade_key, modulo_id, atividade_id, xp, concluido_em')
+    .eq('aluno_id', alunoId)
+    .order('concluido_em');
 
-  ok(res, { aluno, progresso, tentativas });
+  const { data: tentativas } = await pdo
+    .from('tentativas')
+    .select('atividade_key, modulo_id, skill, erros, tempo_ms, concluiu, criado_em')
+    .eq('aluno_id', alunoId)
+    .order('criado_em', { ascending: false })
+    .limit(200);
+
+  ok(res, { aluno, progresso: progresso || [], tentativas: tentativas || [] });
 };

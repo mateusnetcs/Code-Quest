@@ -1,5 +1,5 @@
 const { db } = require('../../lib/db');
-const { cors, ok } = require('../../lib/http');
+const { cors, ok, fail, castNum } = require('../../lib/http');
 const { requireProfessor } = require('../../lib/auth');
 
 /** GET — habilidades prejudicadas, com módulo e atividade */
@@ -11,47 +11,13 @@ module.exports = async (req, res) => {
   const tid = auth.tenant_id;
   const pdo = db();
 
-  const { rows: porSkillRaw } = await pdo.query(
-    `SELECT CASE WHEN skill IS NULL OR skill = '' THEN '(sem skill)' ELSE skill END AS skill,
-            COALESCE(SUM(erros),0) AS erros,
-            COUNT(*) AS tentativas,
-            COALESCE(SUM(tempo_ms),0) AS tempo_ms
-     FROM tentativas
-     WHERE tenant_id = $1
-     GROUP BY skill
-     ORDER BY erros DESC, tentativas DESC`,
-    [tid]
-  );
-  const porSkill = porSkillRaw.map((r) => ({
-    skill: r.skill,
-    erros: Number(r.erros),
-    tentativas: Number(r.tentativas),
-    tempo_ms: Number(r.tempo_ms),
-  }));
+  const { data: porSkillRaw, error: e1 } = await pdo.rpc('habilidades_por_skill', { p_tenant_id: tid });
+  if (e1) return fail(res, 'Erro ao buscar habilidades.', 500);
+  const porSkill = castNum(porSkillRaw, ['erros', 'tentativas', 'tempo_ms']);
 
-  const { rows: detalheRaw } = await pdo.query(
-    `SELECT CASE WHEN skill IS NULL OR skill = '' THEN '(sem skill)' ELSE skill END AS skill,
-            modulo_id,
-            atividade_id,
-            atividade_key,
-            COALESCE(SUM(erros),0) AS erros,
-            COUNT(*) AS tentativas,
-            COALESCE(SUM(tempo_ms),0) AS tempo_ms
-     FROM tentativas
-     WHERE tenant_id = $1
-     GROUP BY skill, modulo_id, atividade_id, atividade_key
-     ORDER BY erros DESC, tentativas DESC, atividade_key`,
-    [tid]
-  );
-  const detalhe = detalheRaw.map((r) => ({
-    skill: r.skill,
-    modulo_id: Number(r.modulo_id),
-    atividade_id: Number(r.atividade_id),
-    atividade_key: r.atividade_key,
-    erros: Number(r.erros),
-    tentativas: Number(r.tentativas),
-    tempo_ms: Number(r.tempo_ms),
-  }));
+  const { data: detalheRaw, error: e2 } = await pdo.rpc('habilidades_detalhe', { p_tenant_id: tid });
+  if (e2) return fail(res, 'Erro ao buscar habilidades.', 500);
+  const detalhe = castNum(detalheRaw, ['modulo_id', 'atividade_id', 'erros', 'tentativas', 'tempo_ms']);
 
   ok(res, {
     habilidade_mais_prejudicada: porSkill[0] || null,

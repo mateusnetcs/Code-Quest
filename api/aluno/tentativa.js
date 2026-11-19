@@ -35,18 +35,26 @@ module.exports = async (req, res) => {
   const CAP_3H = 1000 * 60 * 180;
   if (tempo > CAP_3H) tempo = CAP_3H;
 
-  const pdo = db();
-  const { rows } = await pdo.query(
-    `INSERT INTO tentativas
-      (aluno_id, tenant_id, modulo_id, atividade_id, atividade_key, skill, erros, tempo_ms, concluiu)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-     RETURNING id`,
-    [auth.aluno_id, auth.tenant_id, mid, aid, key, skill, erros, tempo, concluiu]
-  );
+  const { data, error } = await db()
+    .from('tentativas')
+    .insert({
+      aluno_id: auth.aluno_id,
+      tenant_id: auth.tenant_id,
+      modulo_id: mid,
+      atividade_id: aid,
+      atividade_key: key,
+      skill,
+      erros,
+      tempo_ms: tempo,
+      concluiu,
+    })
+    .select('id')
+    .single();
+  if (error) return fail(res, 'Erro ao registrar tentativa.', 500);
 
   ok(res, {
     registrado: true,
-    id: Number(rows[0].id),
+    id: data.id,
     erros,
     tempo_ms: tempo,
   });

@@ -79,3 +79,159 @@ insert into professores (tenant_id, usuario, senha_hash, nome)
   select id, 'professor', '$2b$10$WtUuTIMBwjLmZAycaUBVBesf1t9zejW/XL13r2JVARkgnp5HgRinO', 'Professor(a)'
   from tenants where codigo = 'OFICINA1'
   on conflict (tenant_id, usuario) do nothing;
+
+-- ---------------------------------------------------------------------
+-- Funções RPC — a API REST do Supabase (PostgREST) não faz GROUP BY/SUM
+-- direto, então os relatórios do painel do professor chamam essas funções
+-- (POST /rest/v1/rpc/<nome>, usado pelo cliente supabase-js em api/).
+-- ---------------------------------------------------------------------
+
+create or replace function dashboard_resumo(p_tenant_id bigint)
+returns table (
+  alunos bigint,
+  alunos_com_progresso bigint,
+  tentativas bigint,
+  erros_totais bigint,
+  tempo_total_ms bigint
+)
+language sql stable as $$
+  select
+    (select count(*) from alunos where tenant_id = p_tenant_id and ativo = 1),
+    (select count(distinct p.aluno_id) from progresso p join alunos a on a.id = p.aluno_id where a.tenant_id = p_tenant_id),
+    (select count(*) from tentativas where tenant_id = p_tenant_id),
+    (select coalesce(sum(erros),0) from tentativas where tenant_id = p_tenant_id),
+    (select coalesce(sum(tempo_ms),0) from tentativas where tenant_id = p_tenant_id);
+$$;
+
+create or replace function erros_por_pessoa(p_tenant_id bigint)
+returns table (aluno_id bigint, nome varchar, erros bigint, tentativas bigint)
+language sql stable as $$
+  select a.id, a.nome, coalesce(sum(t.erros),0), count(t.id)
+  from alunos a
+  left join tentativas t on t.aluno_id = a.id
+  where a.tenant_id = p_tenant_id and a.ativo = 1
+  group by a.id, a.nome
+  order by 3 desc, a.nome
+  limit 50;
+$$;
+
+create or replace function erros_por_modulo(p_tenant_id bigint)
+returns table (modulo_id integer, erros bigint, tentativas bigint, tempo_ms bigint)
+language sql stable as $$
+  select modulo_id, coalesce(sum(erros),0), count(*), coalesce(sum(tempo_ms),0)
+  from tentativas
+  where tenant_id = p_tenant_id
+  group by modulo_id
+  order by 2 desc;
+$$;
+
+create or replace function erros_por_atividade(p_tenant_id bigint)
+returns table (atividade_key varchar, modulo_id integer, atividade_id integer, erros bigint, tentativas bigint, tempo_medio_ms numeric, tempo_ms bigint)
+language sql stable as $$
+  select atividade_key, modulo_id, atividade_id,
+         coalesce(sum(erros),0), count(*), coalesce(avg(tempo_ms),0), coalesce(sum(tempo_ms),0)
+  from tentativas
+  where tenant_id = p_tenant_id
+  group by atividade_key, modulo_id, atividade_id
+  order by 4 desc
+  limit 50;
+$$;
+
+create or replace function tempos_por_aluno(p_tenant_id bigint)
+returns table (aluno_id bigint, nome varchar, tempo_ms bigint, tempo_medio_ms numeric, tentativas bigint)
+language sql stable as $$
+  select a.id, a.nome, coalesce(sum(t.tempo_ms),0), coalesce(avg(t.tempo_ms),0), count(t.id)
+  from alunos a
+  left join tentativas t on t.aluno_id = a.id
+  where a.tenant_id = p_tenant_id and a.ativo = 1
+  group by a.id, a.nome
+  order by 3 desc;
+$$;
+
+create or replace function tempos_por_modulo(p_tenant_id bigint, p_aluno_id bigint default null)
+returns table (modulo_id integer, tempo_ms bigint, tempo_medio_ms numeric, tentativas bigint)
+language sql stable as $$
+  select modulo_id, coalesce(sum(tempo_ms),0), coalesce(avg(tempo_ms),0), count(*)
+  from tentativas
+  where tenant_id = p_tenant_id and (p_aluno_id is null or aluno_id = p_aluno_id)
+  group by modulo_id
+  order by 2 desc;
+$$;
+
+create or replace function tempos_por_atividade(p_tenant_id bigint, p_aluno_id bigint default null)
+returns table (atividade_key varchar, modulo_id integer, atividade_id integer, tempo_ms bigint, tempo_medio_ms numeric, tentativas bigint)
+language sql stable as $$
+  select atividade_key, modulo_id, atividade_id,
+         coalesce(sum(tempo_ms),0), coalesce(avg(tempo_ms),0), count(*)
+  from tentativas
+  where tenant_id = p_tenant_id and (p_aluno_id is null or aluno_id = p_aluno_id)
+  group by atividade_key, modulo_id, atividade_id
+  order by 4 desc
+  limit 100;
+$$;
+
+create or replace function habilidades_por_skill(p_tenant_id bigint)
+returns table (skill text, erros bigint, tentativas bigint, tempo_ms bigint)
+language sql stable as $$
+  select case when skill is null or skill = '' then '(sem skill)' else skill end,
+         coalesce(sum(erros),0), count(*), coalesce(sum(tempo_ms),0)
+  from tentativas
+  where tenant_id = p_tenant_id
+  group by skill
+  order by 2 desc, 3 desc;
+$$;
+
+create or replace function habilidades_detalhe(p_tenant_id bigint)
+returns table (skill text, modulo_id integer, atividade_id integer, atividade_key varchar, erros bigint, tentativas bigint, tempo_ms bigint)
+language sql stable as $$
+  select case when skill is null or skill = '' then '(sem skill)' else skill end,
+         modulo_id, atividade_id, atividade_key,
+         coalesce(sum(erros),0), count(*), coalesce(sum(tempo_ms),0)
+  from tentativas
+  where tenant_id = p_tenant_id
+  group by skill, modulo_id, atividade_id, atividade_key
+  order by 5 desc, 6 desc, atividade_key;
+$$;
+
+create or replace function alunos_lista(p_tenant_id bigint, p_todos boolean default false)
+returns table (
+  id bigint, nome varchar, ativo integer, criado_em timestamptz, eh_dupla integer,
+  concluidas bigint, xp bigint, erros bigint, tempo_ms bigint
+)
+language sql stable as $$
+  select a.id, a.nome, a.ativo, a.criado_em, coalesce(a.eh_dupla, 0),
+    (select count(*) from progresso p where p.aluno_id = a.id),
+    (select coalesce(sum(p.xp),0) from progresso p where p.aluno_id = a.id),
+    (select coalesce(sum(t.erros),0) from tentativas t where t.aluno_id = a.id),
+    (select coalesce(sum(t.tempo_ms),0) from tentativas t where t.aluno_id = a.id)
+  from alunos a
+  where a.tenant_id = p_tenant_id and (p_todos or a.ativo = 1)
+  order by a.ativo desc, 8 desc, a.nome;
+$$;
+
+-- Chamada 1x pelo script de migração, depois de inserir linhas com id explícito
+-- (preservando os ids do SQLite original) — realinha as sequences das colunas
+-- identity para não colidirem com os próximos inserts feitos pelo app.
+create or replace function realign_sequences()
+returns void
+language plpgsql as $$
+begin
+  perform setval(pg_get_serial_sequence('tenants', 'id'), coalesce((select max(id) from tenants), 1));
+  perform setval(pg_get_serial_sequence('professores', 'id'), coalesce((select max(id) from professores), 1));
+  perform setval(pg_get_serial_sequence('alunos', 'id'), coalesce((select max(id) from alunos), 1));
+  perform setval(pg_get_serial_sequence('progresso', 'id'), coalesce((select max(id) from progresso), 1));
+  perform setval(pg_get_serial_sequence('tentativas', 'id'), coalesce((select max(id) from tentativas), 1));
+end;
+$$;
+
+grant execute on function realign_sequences() to service_role;
+grant execute on function alunos_lista(bigint, boolean) to service_role;
+grant execute on function dashboard_resumo(bigint) to service_role;
+grant execute on function erros_por_pessoa(bigint) to service_role;
+grant execute on function erros_por_modulo(bigint) to service_role;
+grant execute on function erros_por_atividade(bigint) to service_role;
+grant execute on function tempos_por_aluno(bigint) to service_role;
+grant execute on function tempos_por_modulo(bigint, bigint) to service_role;
+grant execute on function tempos_por_atividade(bigint, bigint) to service_role;
+grant execute on function habilidades_por_skill(bigint) to service_role;
+grant execute on function habilidades_detalhe(bigint) to service_role;

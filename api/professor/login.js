@@ -19,23 +19,24 @@ module.exports = async (req, res) => {
   if (!codigo || !usuario || !senha) return fail(res, 'Informe codigo, usuario e senha.');
 
   const pdo = db();
-  const { rows: tenants } = await pdo.query('SELECT id, codigo, nome FROM tenants WHERE codigo = $1', [codigo]);
-  const tenant = tenants[0];
+  const { data: tenant } = await pdo.from('tenants').select('id, codigo, nome').eq('codigo', codigo).maybeSingle();
   if (!tenant) return fail(res, 'Tenant/oficina não encontrado.', 404);
 
-  const { rows: profs } = await pdo.query(
-    'SELECT id, usuario, senha_hash, nome FROM professores WHERE tenant_id = $1 AND usuario = $2',
-    [tenant.id, usuario]
-  );
-  const prof = profs[0];
+  const { data: prof } = await pdo
+    .from('professores')
+    .select('id, usuario, senha_hash, nome')
+    .eq('tenant_id', tenant.id)
+    .eq('usuario', usuario)
+    .maybeSingle();
+
   if (!prof || !bcrypt.compareSync(senha, prof.senha_hash)) {
     return fail(res, 'Usuário ou senha inválidos.', 401);
   }
 
   setSession(res, {
     papel: 'professor',
-    professor_id: Number(prof.id),
-    tenant_id: Number(tenant.id),
+    professor_id: prof.id,
+    tenant_id: tenant.id,
     tenant_codigo: tenant.codigo,
     nome: prof.nome,
     usuario: prof.usuario,
@@ -44,10 +45,10 @@ module.exports = async (req, res) => {
   ok(res, {
     papel: 'professor',
     professor: {
-      id: Number(prof.id),
+      id: prof.id,
       nome: prof.nome,
       usuario: prof.usuario,
-      tenant_id: Number(tenant.id),
+      tenant_id: tenant.id,
       tenant_codigo: tenant.codigo,
       tenant_nome: tenant.nome,
     },

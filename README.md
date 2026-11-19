@@ -24,28 +24,35 @@ PHP: `/api/aluno/...`, `/api/professor/...`, `/api/me`). Banco de dados:
 Postgres no [Supabase](https://supabase.com). Login de aluno e de professor
 usa um cookie de sessão assinado (JWT), `httpOnly`.
 
+A API usada é a REST do Supabase (PostgREST), não uma conexão direta ao
+Postgres — por isso não precisa da senha do banco, só da `secret key` do
+projeto. Consultas com `GROUP BY`/`SUM` (rankings, dashboard) passam por
+funções RPC já definidas em `supabase/schema.sql` (`POST /rest/v1/rpc/...`).
+
 ### Variáveis de ambiente (Vercel → Project Settings → Environment Variables)
 
 | Nome | De onde vem |
 |---|---|
-| `SUPABASE_DB_URL` | Supabase → Project Settings → Database → Connection string → **Transaction pooler** (porta 6543) |
+| `SUPABASE_URL` | Supabase → Project Settings → API |
+| `SUPABASE_SECRET_KEY` | Supabase → Project Settings → API → **secret key** (`sb_secret_...`) — nunca no frontend |
 | `SESSION_SECRET` | Uma string aleatória longa, só sua (ex: `openssl rand -base64 48`) |
 
 ### Primeiro deploy
 
 1. Crie um projeto no [Supabase](https://supabase.com).
 2. No **SQL Editor** do Supabase, rode o conteúdo de `supabase/schema.sql`
-   (cria as tabelas e já deixa um professor padrão: usuário `professor`,
-   senha `professor123` — troque depois do primeiro login).
+   (cria as tabelas, as funções RPC dos relatórios e já deixa um professor
+   padrão: usuário `professor`, senha `professor123` — troque depois do
+   primeiro login).
 3. No Vercel, importe este repositório e configure as variáveis de ambiente
    acima.
 4. (Opcional) Se você já tem dados reais num `api/data/codequest.sqlite`
    local, migre-os para o Supabase antes do deploy:
    ```bash
    npm install
-   SUPABASE_DB_URL="postgresql://...pooler.supabase.com:6543/postgres" npm run migrate
+   SUPABASE_URL="https://xxxxx.supabase.co" SUPABASE_SECRET_KEY="sb_secret_..." npm run migrate
    ```
-   O script lê o SQLite local e grava no Postgres preservando os IDs
+   O script lê o SQLite local e grava no Supabase preservando os IDs
    (`scripts/migrate-to-supabase.js`). Não precisa rodar de novo em deploys
    seguintes.
 
@@ -64,6 +71,6 @@ chamam a API em `/api/...` relativo à própria origem.)
 
 O Supabase expõe, por padrão, uma API REST pública (PostgREST). As tabelas em
 `supabase/schema.sql` já sobem com Row Level Security ligado e **nenhuma
-policy** — ou seja, a chave pública (`anon`) do Supabase não enxerga nada
-dessas tabelas. Só as funções em `api/` (via `SUPABASE_DB_URL`, que usa a
-credencial de banco, não a API REST) conseguem ler e escrever.
+policy** — ou seja, a chave pública (`publishable`/`anon`) do Supabase não
+enxerga nada dessas tabelas. Só quem usa a `secret key` (as funções em `api/`,
+nunca o navegador) consegue ler e escrever.

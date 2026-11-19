@@ -98,31 +98,34 @@ module.exports = async (req, res) => {
     }
 
     const norm = nomeNorm(nome);
-    const { rows: existRows } = await pdo.query(
-      'SELECT id, nome, ativo FROM alunos WHERE tenant_id = $1 AND nome_norm = $2',
-      [tid, norm]
-    );
-    const exist = existRows[0];
+    const { data: exist } = await pdo
+      .from('alunos')
+      .select('id, nome, ativo')
+      .eq('tenant_id', tid)
+      .eq('nome_norm', norm)
+      .maybeSingle();
 
     if (exist) {
       if (Number(exist.ativo) === 1) {
-        jaExistem.push({ id: Number(exist.id), nome: exist.nome, eh_dupla: ehDupla });
+        jaExistem.push({ id: exist.id, nome: exist.nome, eh_dupla: ehDupla });
         continue;
       }
-      await pdo.query('UPDATE alunos SET ativo = 1, nome = $1, eh_dupla = $2 WHERE id = $3', [nome, ehDupla, exist.id]);
-      reativados.push({ id: Number(exist.id), nome, eh_dupla: ehDupla });
+      await pdo.from('alunos').update({ ativo: 1, nome, eh_dupla: ehDupla }).eq('id', exist.id);
+      reativados.push({ id: exist.id, nome, eh_dupla: ehDupla });
       continue;
     }
 
-    try {
-      const { rows: insRows } = await pdo.query(
-        'INSERT INTO alunos (tenant_id, nome, nome_norm, eh_dupla, ativo) VALUES ($1,$2,$3,$4,1) RETURNING id',
-        [tid, nome, norm, ehDupla]
-      );
-      criados.push({ id: Number(insRows[0].id), nome, eh_dupla: ehDupla, login: nome });
-    } catch {
+    const { data: inserido, error: insError } = await pdo
+      .from('alunos')
+      .insert({ tenant_id: tid, nome, nome_norm: norm, eh_dupla: ehDupla, ativo: 1 })
+      .select('id')
+      .single();
+
+    if (insError) {
       erros.push({ nome, erro: 'Não foi possível cadastrar' });
+      continue;
     }
+    criados.push({ id: inserido.id, nome, eh_dupla: ehDupla, login: nome });
   }
 
   ok(res, {

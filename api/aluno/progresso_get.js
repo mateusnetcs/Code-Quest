@@ -1,5 +1,5 @@
 const { db } = require('../../lib/db');
-const { cors, ok } = require('../../lib/http');
+const { cors, ok, fail } = require('../../lib/http');
 const { requireAluno } = require('../../lib/auth');
 
 /**
@@ -11,10 +11,12 @@ module.exports = async (req, res) => {
   const auth = requireAluno(req, res);
   if (!auth) return;
 
-  const { rows } = await db().query(
-    'SELECT atividade_key, xp, modulo_id, atividade_id, concluido_em FROM progresso WHERE aluno_id = $1 ORDER BY concluido_em',
-    [auth.aluno_id]
-  );
+  const { data: rows, error } = await db()
+    .from('progresso')
+    .select('atividade_key, xp, modulo_id, atividade_id, concluido_em')
+    .eq('aluno_id', auth.aluno_id)
+    .order('concluido_em');
+  if (error) return fail(res, 'Erro ao buscar progresso.', 500);
 
   const feito = [];
   let xp = 0;

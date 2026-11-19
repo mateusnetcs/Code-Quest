@@ -25,40 +25,35 @@ module.exports = async (req, res) => {
 
   const pdo = db();
 
-  const { rows: existentes } = await pdo.query('SELECT id FROM tenants WHERE codigo = $1', [codigo]);
-  if (existentes[0]) return fail(res, 'Já existe uma oficina com esse código.');
+  const { data: existente } = await pdo.from('tenants').select('id').eq('codigo', codigo).maybeSingle();
+  if (existente) return fail(res, 'Já existe uma oficina com esse código.');
 
-  const { rows: euRows } = await pdo.query('SELECT usuario, senha_hash, nome FROM professores WHERE id = $1', [
-    auth.professor_id,
-  ]);
-  const eu = euRows[0];
+  const { data: eu } = await pdo
+    .from('professores')
+    .select('usuario, senha_hash, nome')
+    .eq('id', auth.professor_id)
+    .maybeSingle();
   if (!eu) return fail(res, 'Professor não encontrado.', 404);
 
-  const client = await pdo.connect();
-  let tenantId, profId;
-  try {
-    await client.query('BEGIN');
-    const { rows: tRows } = await client.query('INSERT INTO tenants (codigo, nome) VALUES ($1,$2) RETURNING id', [
-      codigo,
-      nome,
-    ]);
-    tenantId = Number(tRows[0].id);
+  const { data: tenant, error: tError } = await pdo
+    .from('tenants')
+    .insert({ codigo, nome })
+    .select('id')
+    .single();
+  if (tError) return fail(res, 'Não foi possível criar a oficina.');
 
-    const { rows: pRows } = await client.query(
-      'INSERT INTO professores (tenant_id, usuario, senha_hash, nome) VALUES ($1,$2,$3,$4) RETURNING id',
-      [tenantId, eu.usuario, eu.senha_hash, eu.nome]
-    );
-    profId = Number(pRows[0].id);
-    await client.query('COMMIT');
-  } catch {
-    await client.query('ROLLBACK');
-    client.release();
+  const { data: prof, error: pError } = await pdo
+    .from('professores')
+    .insert({ tenant_id: tenant.id, usuario: eu.usuario, senha_hash: eu.senha_hash, nome: eu.nome })
+    .select('id')
+    .single();
+  if (pError) {
+    await pdo.from('tenants').delete().eq('id', tenant.id);
     return fail(res, 'Não foi possível criar a oficina.');
   }
-  client.release();
 
   ok(res, {
-    oficina: { id: tenantId, codigo, nome, professor_id: profId },
+    oficina: { id: tenant.id, codigo, nome, professor_id: prof.id },
     dica: 'Alunos entram no jogo com o código ' + codigo + ' e o nome cadastrado nesta oficina.',
   });
 };

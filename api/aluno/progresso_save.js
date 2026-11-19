@@ -2,15 +2,6 @@ const { db } = require('../../lib/db');
 const { cors, ok, fail, body } = require('../../lib/http');
 const { requireAluno } = require('../../lib/auth');
 
-const UPSERT = `
-  INSERT INTO progresso (aluno_id, atividade_key, modulo_id, atividade_id, xp, concluido)
-  VALUES ($1,$2,$3,$4,$5,1)
-  ON CONFLICT (aluno_id, atividade_key) DO UPDATE SET
-    xp = EXCLUDED.xp,
-    concluido = 1,
-    concluido_em = CURRENT_TIMESTAMP
-`;
-
 /**
  * POST {
  *   "atividade_key": "1-3",
@@ -30,16 +21,27 @@ module.exports = async (req, res) => {
   const b = body(req);
   const pdo = db();
   const alunoId = auth.aluno_id;
+  // Mapa por atividade_key: dentro de um único upsert, o Postgres não aceita
+  // duas linhas disputando o mesmo alvo de ON CONFLICT — e o jogo manda o
+  // "feito" completo junto com a atividade_key avulsa na mesma chamada, então
+  // deduplicamos aqui (a entrada avulsa, processada por último, prevalece).
+  const linhas = new Map();
 
   if (Array.isArray(b.feito) && b.feito.length) {
     for (const rawKey of b.feito) {
       const key = String(rawKey);
       const m = key.match(/^(\d+)-(\d+)$/);
       if (!m) continue;
-      const mid = Number(m[1]);
-      const aid = Number(m[2]);
       const xpItem = Number((b.xp_map && b.xp_map[key]) || 0);
-      await pdo.query(UPSERT, [alunoId, key, mid, aid, xpItem]);
+      linhas.set(key, {
+        aluno_id: alunoId,
+        atividade_key: key,
+        modulo_id: Number(m[1]),
+        atividade_id: Number(m[2]),
+        xp: xpItem,
+        concluido: 1,
+        concluido_em: new Date().toISOString(),
+      });
     }
   }
 
@@ -47,13 +49,25 @@ module.exports = async (req, res) => {
   if (key) {
     const m = key.match(/^(\d+)-(\d+)$/);
     if (!m) return fail(res, 'atividade_key inválida.');
-    const mid = Number(b.modulo_id ?? m[1]);
-    const aid = Number(b.atividade_id ?? m[2]);
-    const xp = Number(b.xp || 0);
-    await pdo.query(UPSERT, [alunoId, key, mid, aid, xp]);
+    linhas.set(key, {
+      aluno_id: alunoId,
+      atividade_key: key,
+      modulo_id: Number(b.modulo_id ?? m[1]),
+      atividade_id: Number(b.atividade_id ?? m[2]),
+      xp: Number(b.xp || 0),
+      concluido: 1,
+      concluido_em: new Date().toISOString(),
+    });
   }
 
-  const { rows } = await pdo.query('SELECT atividade_key, xp FROM progresso WHERE aluno_id = $1', [alunoId]);
+  if (linhas.size) {
+    const { error } = await pdo.from('progresso').upsert([...linhas.values()], { onConflict: 'aluno_id,atividade_key' });
+    if (error) return fail(res, 'Erro ao salvar progresso.', 500);
+  }
+
+  const { data: rows, error: selError } = await pdo.from('progresso').select('atividade_key, xp').eq('aluno_id', alunoId);
+  if (selError) return fail(res, 'Erro ao buscar progresso.', 500);
+
   const feito = rows.map((r) => r.atividade_key);
   const totalXp = rows.reduce((acc, r) => acc + Number(r.xp), 0);
 

@@ -22,16 +22,17 @@ module.exports = async (req, res) => {
   const ids = (await professorOficinas(auth.usuario)).map((o) => o.id);
   if (!ids.length) return fail(res, 'Nenhuma oficina disponível.', 403);
 
-  const { rows } = await pdo.query(
-    `SELECT id, nome, tenant_id FROM alunos WHERE id = $1 AND tenant_id = ANY($2::bigint[])`,
-    [alunoId, ids]
-  );
-  const aluno = rows[0];
+  const { data: aluno } = await pdo
+    .from('alunos')
+    .select('id, nome, tenant_id')
+    .eq('id', alunoId)
+    .in('tenant_id', ids)
+    .maybeSingle();
   if (!aluno) return fail(res, 'Aluno não encontrado.', 404);
 
-  await pdo.query('UPDATE alunos SET ativo = $1 WHERE id = $2', [ativo, alunoId]);
+  await pdo.from('alunos').update({ ativo }).eq('id', alunoId);
 
   ok(res, {
-    aluno: { id: alunoId, nome: aluno.nome, ativo, tenant_id: Number(aluno.tenant_id) },
+    aluno: { id: alunoId, nome: aluno.nome, ativo, tenant_id: aluno.tenant_id },
   });
 };
