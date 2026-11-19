@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Habilidades BNCC mais impactadas — Code Quest BNCC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#2a78d6; --orange:#eb6834;
+    --ink:#1a1a1a; --muted:#666666; --line:#e7e7e7;
+    --body:'Nunito',sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{font-family:var(--body);background:#ffffff;margin:0;padding:44px}
+  .wrap{width:1280px;max-width:100%;margin:0 auto;background:#ffffff}
+  .report-nav{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:22px;justify-content:center}
+  .report-nav a{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;border-radius:99px;border:1px solid var(--line);background:#fafafa;color:var(--muted);font-weight:700;font-size:13px;text-decoration:none}
+  .report-nav a:hover{border-color:var(--blue);color:var(--ink)}
+  .report-nav a.active{background:var(--blue);border-color:var(--blue);color:#fff}
+  h1{font-size:28px;font-weight:900;color:var(--ink);margin:0 0 4px;text-align:center}
+  p.sub{color:var(--muted);font-size:17px;text-align:center;margin:0 0 30px;font-weight:700}
+
+  .chartrow{display:flex;justify-content:center;gap:40px;align-items:center;margin-bottom:38px;flex-wrap:wrap}
+  .donut{position:relative;width:300px;height:300px;margin:0 auto;flex:none}
+  .donut .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .donut .center b{font-size:54px;font-weight:900;color:var(--ink);line-height:1}
+  .donut .center span{font-size:14px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-top:4px;text-align:center}
+
+  .legend{display:inline-flex;flex-direction:column;gap:18px}
+  .litem{display:flex;align-items:center;justify-content:space-between;gap:30px;padding:16px 24px;border:2px solid var(--line);border-radius:16px}
+  .linfo{display:flex;align-items:center;gap:16px}
+  .dot{width:20px;height:20px;border-radius:50%;flex:none}
+  .ltext b.code{font-size:15px;font-weight:900;letter-spacing:.02em;color:var(--ink);display:block}
+  .ltext .name{font-size:15px;color:var(--muted);font-weight:700;white-space:nowrap}
+  .lval{text-align:right}
+  .lval b{font-size:34px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+  .lval .pct{font-size:14px;font-weight:800;color:var(--muted);white-space:nowrap}
+
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  .card{border:2px solid var(--line);border-radius:18px;padding:26px 28px}
+  .card .head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .card .badge{font-weight:900;font-size:16px;letter-spacing:.02em;color:#fff;padding:5px 12px;border-radius:9px}
+  .card .eixo{font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+  .card h2{font-size:19px;font-weight:900;color:var(--ink);margin:0 0 12px;line-height:1.3}
+  .card p{font-size:15.5px;color:#333;line-height:1.55;margin:0 0 12px}
+  .card p.why{color:var(--muted);font-style:italic}
+  .card .src{font-size:12px;color:#999;margin-top:10px}
+  @media (max-width:860px){ .cards{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="report-nav">
+<a href="diario-expedicao.html">🖱️ Turma 01</a>
+<a href="diario-expedicao-turma02.html">⌨️ Turma 02</a>
+<a href="diario-expedicao-comparacao.html">🆚 Comparativo</a>
+<a href="desempenho-alunos.html">🧑‍🎓 Desempenho</a>
+<a href="habilidades-bncc.html" class="active">🧩 Habilidades BNCC</a>
+<a href="habilidades-atividades.html">🏅 Atividades</a>
+<a href="./">📋 Todos os relatórios</a>
+<a href="../index.html">🎓 Certificados</a>
+</nav>
+  <h1>As duas habilidades BNCC mais impactadas</h1>
+  <p class="sub">Erros registrados nas tentativas · turmas 01 e 02 combinadas</p>
+
+  <div class="chartrow">
+    <div class="donut">
+      <svg width="300" height="300" viewBox="0 0 300 300">
+        <circle cx="150" cy="150" r="110" fill="none" stroke="#f0f0f0" stroke-width="40"/>
+        <g transform="rotate(-90 150 150)">
+          <circle cx="150" cy="150" r="110" fill="none" stroke="var(--blue)" stroke-width="40"
+                  stroke-dasharray="580.39 691.15" stroke-dashoffset="0" stroke-linecap="round"/>
+          <circle cx="150" cy="150" r="110" fill="none" stroke="var(--orange)" stroke-width="40"
+                  stroke-dasharray="100.76 691.15" stroke-dashoffset="-585.39" stroke-linecap="round"/>
+        </g>
+      </svg>
+      <div class="center"><b>5,5×</b><span>mais erros em<br>EF05CO07</span></div>
+    </div>
+
+    <div class="legend">
+      <div class="litem">
+        <div class="linfo">
+          <div class="dot" style="background:var(--blue)"></div>
+          <div class="ltext"><b class="code">EF05CO07</b><span class="name">Sistema operacional (Mundo Digital)</span></div>
+        </div>
+        <div class="lval"><b style="color:var(--blue)">3.963</b><div class="pct">84,7% dos erros · 506 tentativas</div></div>
+      </div>
+      <div class="litem">
+        <div class="linfo">
+          <div class="dot" style="background:var(--orange)"></div>
+          <div class="ltext"><b class="code">EF05CO11</b><span class="name">Uso de tecnologias computacionais (Cultura Digital)</span></div>
+        </div>
+        <div class="lval"><b style="color:var(--orange)">716</b><div class="pct">15,3% dos erros · 76 tentativas</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="head"><span class="badge" style="background:var(--blue)">EF05CO07</span><span class="eixo">Mundo Digital</span></div>
+      <h2>"Reconhecer a necessidade de um sistema operacional para a execução de programas e gerenciamento do hardware."</h2>
+      <p>É a habilidade por trás das ações mais básicas de operar um computador: clicar, arrastar, digitar, usar atalhos como Ctrl+C/Ctrl+V. No Code Quest, ela aparece nos módulos Mestre do Mouse, Atalhos Mágicos e Mestre da Digitação.</p>
+      <p class="why">Por que importa: antes de usar qualquer programa, o aluno precisa dominar a "porta de entrada" — mouse e teclado. É onde a coordenação motora e a memória muscular ainda estão em construção, por isso concentrou a maior parte dos erros.</p>
+      <div class="src">Fonte: Computação na Educação Básica — Complemento à BNCC (2022)</div>
+    </div>
+
+    <div class="card">
+      <div class="head"><span class="badge" style="background:var(--orange)">EF05CO11</span><span class="eixo">Cultura Digital</span></div>
+      <h2>"Identificar a adequação de diferentes tecnologias computacionais na resolução de problemas."</h2>
+      <p>É a habilidade de escolher e combinar o que já foi aprendido para resolver um desafio novo. No Code Quest, aparece nos desafios finais de cada módulo — como Desafio de Frases e Desafio do Teclado — que exigem aplicar várias ações junto.</p>
+      <p class="why">Por que importa: é o pensamento computacional aplicado à prática — não basta repetir um gesto isolado, é preciso decidir qual ferramenta usar e como combiná-la para chegar ao resultado.</p>
+      <div class="src">Fonte: Computação na Educação Básica — Complemento à BNCC (2022)</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

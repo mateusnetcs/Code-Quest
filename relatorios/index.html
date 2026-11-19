@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relatórios — Code Quest BNCC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--gold:#b8860b;--ink:#2a1f0f;--muted:#8a7f66;--bg:#e4dcc5;--card:#fffdf6;--line:rgba(184,134,11,.35)}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:var(--bg);font-family:'Nunito',sans-serif;color:var(--ink);padding:36px 16px 60px}
+  .wrap{max-width:900px;margin:0 auto}
+  header{text-align:center;margin-bottom:30px}
+  .selo{font-weight:900;letter-spacing:.08em;color:#8a6d1f;font-size:14px;margin-bottom:6px}
+  h1{font-family:'Playfair Display',serif;font-size:32px;margin:0 0 10px}
+  header p{color:var(--muted);font-size:15px;max-width:560px;margin:0 auto;line-height:1.55}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:30px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 10px 30px rgba(42,31,15,.08);
+        display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s}
+  .card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(42,31,15,.14)}
+  .card .icon{font-size:30px;margin-bottom:10px}
+  .card h2{font-size:17px;margin:0 0 8px;font-family:'Playfair Display',serif}
+  .card p{font-size:13.5px;color:var(--muted);line-height:1.5;margin:0 0 18px;flex:1}
+  .card .go{align-self:flex-start;font-weight:800;font-size:13px;color:var(--gold)}
+
+  footer{text-align:center;margin-top:36px;font-size:12.5px;color:var(--muted);line-height:1.6}
+  footer a{color:#8a6d1f;font-weight:700;text-decoration:none}
+  footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="selo">🎮 CODE QUEST BNCC</div>
+      <h1>Relatórios</h1>
+      <p>Análises completas dos registros reais do jogo — Turma01, Turma02, desempenho por aluno e as habilidades BNCC mais impactadas. Todos os números são conferidos (reenvios duplicados já removidos).</p>
+    </header>
+
+    <div class="grid">
+      <a class="card" href="diario-expedicao.html">
+        <div class="icon">🖱️</div>
+        <h2>Diário da Expedição — Turma 01</h2>
+        <p>Leitura completa dos registros da OFICINA01: todo clique, atalho e tentativa de duplas e jogadores individuais.</p>
+        <span class="go">Ver relatório →</span>
+      </a>
+
+      <a class="card" href="diario-expedicao-turma02.html">
+        <div class="icon">⌨️</div>
+        <h2>Diário da Expedição — Turma 02</h2>
+        <p>O mesmo diário completo, agora para a OFICINA02.</p>
+        <span class="go">Ver relatório →</span>
+      </a>
+
+      <a class="card" href="diario-expedicao-comparacao.html">
+        <div class="icon">🆚</div>
+        <h2>Comparativo entre Turmas</h2>
+        <p>Turma01 contra Turma02 lado a lado: erros, tempo e conclusão por módulo.</p>
+        <span class="go">Ver relatório →</span>
+      </a>
+
+      <a class="card" href="desempenho-alunos.html">
+        <div class="icon">🧑‍🎓</div>
+        <h2>Desempenho por Aluno</h2>
+        <p>Conclusão do currículo × erro médio, aluno por aluno (ou dupla) — Turma01.</p>
+        <span class="go">Ver relatório →</span>
+      </a>
+
+      <a class="card" href="habilidades-bncc.html">
+        <div class="icon">🧩</div>
+        <h2>Habilidades BNCC mais Impactadas</h2>
+        <p>As duas habilidades da BNCC Computação com mais erro, com a explicação oficial de cada uma e por que importam.</p>
+        <span class="go">Ver relatório →</span>
+      </a>
+
+      <a class="card" href="habilidades-atividades.html">
+        <div class="icon">🏅</div>
+        <h2>Atividades Mais Difíceis</h2>
+        <p>Top 10 atividades do jogo com mais erro, com o código BNCC e o módulo de cada uma.</p>
+        <span class="go">Ver relatório →</span>
+      </a>
+    </div>
+
+    <footer>
+      <a href="../index.html">← Voltar para Certificados</a>
+    </footer>
+  </div>
+</body>
+</html>

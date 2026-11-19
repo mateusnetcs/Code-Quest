@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Desempenho por aluno — Code Quest BNCC</title>
+<style>
+  :root{
+    --blue:#2a78d6; --orange:#eb6834;
+    --ink:#1a1a1a; --muted:#6b6b6b; --grid:#e6e6e6; --surface:#ffffff; --card:#f7f8fa;
+  }
+  *{box-sizing:border-box}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:#eef0f3;margin:0;padding:40px 24px;color:var(--ink)}
+  .wrap{max-width:1020px;margin:0 auto}
+  .report-nav{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:22px}
+  .report-nav a{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;border-radius:99px;border:1px solid var(--grid);background:var(--card);color:var(--muted);font-weight:700;font-size:13px;text-decoration:none}
+  .report-nav a:hover{border-color:var(--blue);color:var(--ink)}
+  .report-nav a.active{background:var(--blue);border-color:var(--blue);color:#fff}
+  h1{font-size:26px;margin:0 0 6px}
+  p.lede{color:var(--muted);margin:0 0 28px;font-size:15px;max-width:820px}
+  .card{background:var(--surface);border-radius:16px;padding:28px 28px 24px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .card h2{font-size:18px;margin:0 0 4px}
+  .card .sub{color:var(--muted);font-size:13px;margin:0 0 20px}
+  svg{display:block;width:100%;height:auto}
+  .caption{font-size:13px;fill:var(--muted)}
+  .note{margin-top:14px;font-size:13.5px;color:var(--muted);line-height:1.5}
+  .dot-label{font-size:14px;font-weight:700;fill:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="report-nav">
+<a href="diario-expedicao.html">🖱️ Turma 01</a>
+<a href="diario-expedicao-turma02.html">⌨️ Turma 02</a>
+<a href="diario-expedicao-comparacao.html">🆚 Comparativo</a>
+<a href="desempenho-alunos.html" class="active">🧑‍🎓 Desempenho</a>
+<a href="habilidades-bncc.html">🧩 Habilidades BNCC</a>
+<a href="habilidades-atividades.html">🏅 Atividades</a>
+<a href="./">📋 Todos os relatórios</a>
+<a href="../index.html">🎓 Certificados</a>
+</nav>
+  <h1>Desempenho por aluno/dupla — TURMA01</h1>
+  <p class="lede">Resultado individual de cada participante: conclusão do currículo e erro médio por tentativa, juntos. Dados reais e já conferidos do sistema (duplas contam como um único login, como estão registradas).</p>
+
+  <div class="card">
+    <h2>Conclusão × Erro médio</h2>
+    <p class="sub">Cada ponto é um aluno/dupla. Direita = concluiu mais; embaixo = errou menos.</p>
+    <svg viewBox="0 0 980 460">
+      <line x1="90" y1="400" x2="940" y2="400" stroke="#cccccc"/>
+      <line x1="90" y1="40" x2="90" y2="400" stroke="#cccccc"/>
+      <text x="515" y="440" text-anchor="middle" class="caption" font-size="14">% do currículo concluído →</text>
+      <text x="30" y="220" text-anchor="middle" class="caption" font-size="14" transform="rotate(-90 30 220)">← erro médio por tentativa</text>
+      <line x1="90"  y1="40" x2="90"  y2="400" stroke="var(--grid)"/>
+      <line x1="302" y1="40" x2="302" y2="400" stroke="var(--grid)"/>
+      <line x1="515" y1="40" x2="515" y2="400" stroke="var(--grid)"/>
+      <line x1="727" y1="40" x2="727" y2="400" stroke="var(--grid)"/>
+      <line x1="940" y1="40" x2="940" y2="400" stroke="var(--grid)"/>
+      <text x="90"  y="418" text-anchor="middle" class="caption">0%</text>
+      <text x="302" y="418" text-anchor="middle" class="caption">25%</text>
+      <text x="515" y="418" text-anchor="middle" class="caption">50%</text>
+      <text x="727" y="418" text-anchor="middle" class="caption">75%</text>
+      <text x="940" y="418" text-anchor="middle" class="caption">100%</text>
+
+      <circle cx="940" cy="76"  r="14" fill="var(--blue)"/><text x="940" y="81"  text-anchor="middle" class="dot-label" fill="white">1</text>
+      <circle cx="940" cy="138" r="14" fill="var(--blue)"/><text x="940" y="143" text-anchor="middle" class="dot-label" fill="white">2</text>
+      <circle cx="955" cy="224" r="14" fill="var(--blue)"/><text x="955" y="229" text-anchor="middle" class="dot-label" fill="white">3</text>
+      <circle cx="922" cy="193" r="14" fill="var(--blue)"/><text x="922" y="198" text-anchor="middle" class="dot-label" fill="white">4</text>
+      <circle cx="940" cy="281" r="14" fill="var(--blue)"/><text x="940" y="286" text-anchor="middle" class="dot-label" fill="white">5</text>
+      <circle cx="940" cy="346" r="14" fill="var(--blue)"/><text x="940" y="351" text-anchor="middle" class="dot-label" fill="white">6</text>
+      <circle cx="795" cy="224" r="14" fill="var(--blue)"/><text x="795" y="229" text-anchor="middle" class="dot-label" fill="white">7</text>
+      <circle cx="770" cy="240" r="14" fill="var(--blue)"/><text x="770" y="245" text-anchor="middle" class="dot-label" fill="white">8</text>
+      <circle cx="115" cy="256" r="14" fill="var(--orange)"/><text x="115" y="261" text-anchor="middle" class="dot-label" fill="white">9</text>
+    </svg>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px 18px;margin-top:10px;font-size:14px">
+      <div><b>1</b> Bryan &amp; Pedro — 100% · erro 6.75</div>
+      <div><b>4</b> Thawane &amp; Jhennifer — 100% · erro 4.19</div>
+      <div><b>7</b> Rayssa &amp; Izabella — 83% · erro 3.66</div>
+      <div><b>2</b> Emmanuel &amp; Ryalison — 100% · erro 5.47</div>
+      <div><b>5</b> Ana Laura &amp; Rayssa — 100% · erro 2.49</div>
+      <div><b>8</b> Enzo &amp; Ryan — 80% · erro 3.33</div>
+      <div><b>3</b> Carlos — 100% · erro 3.79</div>
+      <div><b>6</b> Enzo Gabriel — 100% · erro 1.12</div>
+      <div style="color:var(--orange);font-weight:600"><b>9</b> Mateus &amp; Maria — 3% · só 2 tentativas</div>
+    </div>
+    <p class="note">9 dos 10 alunos/duplas concluíram 80–100% do currículo. <b>Enzo Gabriel (6)</b> e <b>Ana Laura &amp; Rayssa (5)</b> combinam alta conclusão com baixo erro — melhor desempenho geral. <b>Mateus &amp; Maria (9, laranja)</b> participou pouco (só 2 tentativas) — case isolado, não comparável aos demais. Não inclui <b>Enzo &amp; Yam</b>, que não iniciou nenhuma atividade.</p>
+  </div>
+</div>
+</body>
+</html>

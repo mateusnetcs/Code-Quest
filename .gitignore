@@ -28,18 +28,19 @@ banner-thumbs.jpg
 *.docx
 *.pptx
 
-# Relatórios/gráficos em rascunho (ainda não publicados em relatorios/)
-diario-expedicao.html
-diario-expedicao-turma02.html
-diario-expedicao-comparacao.html
-desempenho-alunos.html
-relatorio-habilidades.html
-opcoes-grafico.html
-habilidades-poster.html
-habilidades-poster.png
-habilidades-top3.png
-donut-habilidades.html
-donut-habilidades.png
-donut-habilidades-poster.html
-donut-habilidades-poster.png
+# Relatórios/gráficos em rascunho na raiz (as versões publicadas ficam em relatorios/)
+/diario-expedicao.html
+/diario-expedicao-turma02.html
+/diario-expedicao-comparacao.html
+/desempenho-alunos.html
+/relatorio-habilidades.html
+/opcoes-grafico.html
+/habilidades-poster.html
+/habilidades-poster.png
+/habilidades-top3.png
+/donut-habilidades.html
+/donut-habilidades.png
+/donut-habilidades-poster.html
+/donut-habilidades-poster.png
+/code-quest-bncc.html
 .env*

@@ -9,20 +9,20 @@ banner-thumbs.jpg
 .~lock.*#
 *.docx
 *.pptx
-diario-expedicao.html
-diario-expedicao-turma02.html
-diario-expedicao-comparacao.html
-desempenho-alunos.html
-relatorio-habilidades.html
-opcoes-grafico.html
-habilidades-poster.html
-habilidades-poster.png
-habilidades-top3.png
-donut-habilidades.html
-donut-habilidades.png
-donut-habilidades-poster.html
-donut-habilidades-poster.png
-code-quest-bncc.html
+/diario-expedicao.html
+/diario-expedicao-turma02.html
+/diario-expedicao-comparacao.html
+/desempenho-alunos.html
+/relatorio-habilidades.html
+/opcoes-grafico.html
+/habilidades-poster.html
+/habilidades-poster.png
+/habilidades-top3.png
+/donut-habilidades.html
+/donut-habilidades.png
+/donut-habilidades-poster.html
+/donut-habilidades-poster.png
+/code-quest-bncc.html
 
 # Backend PHP antigo — substituído pelas Vercel Functions em api/*.js
 api/*.php
