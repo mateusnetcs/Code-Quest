@@ -7,15 +7,12 @@
     "node": ">=18"
   },
   "scripts": {
-    "migrate": "node scripts/migrate-to-supabase.js"
+    "migrate": "npm install --no-save better-sqlite3 && node scripts/migrate-to-supabase.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",
     "bcryptjs": "^2.4.3",
     "cookie": "^0.7.1",
     "jsonwebtoken": "^9.0.2"
-  },
-  "devDependencies": {
-    "better-sqlite3": "^11.7.0"
   }
 }
