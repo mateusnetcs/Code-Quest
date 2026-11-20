@@ -2730,6 +2730,24 @@ const JOGOS = {
 
 loadLocal();
 hud();
+
+/* Link direto para uma atividade (ex: jogo.html?mod=6&ativ=6), sem precisar logar —
+   usado pela Matriz Diagnóstica BNCC para o professor testar a atividade que os
+   alunos erraram. Não salva progresso/tentativa (S.online fica false). */
+(function abrirViaLink(){
+  const p = new URLSearchParams(location.search);
+  const modId = parseInt(p.get('mod'), 10);
+  const ativId = parseInt(p.get('ativ'), 10);
+  if (!modId || !ativId) return;
+  const mod = modById(modId);
+  const ativ = mod && mod.atividades.find(a => a.id === ativId);
+  if (!mod || !ativ) return;
+  ['intro', 'map', 'modmap', 'win'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('on');
+  });
+  abrirAtiv(modId, ativId);
+})();
 </script>
 </body>
 </html>
